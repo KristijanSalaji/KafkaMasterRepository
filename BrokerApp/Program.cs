@@ -9,6 +9,7 @@ namespace BrokerApp
 	{
 		static void Main(string[] args)
 		{
+			Console.WriteLine("Initialize broker host...");
 			var brokerHost = InitializeHost();
 
 			brokerHost.Open();
