@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\KafkaRepo\Kafka\KafkaTest\bin\x64\Debug\KafkaTest.dll" total="13" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2019-08-14" time="16:39:50">
+  <environment nunit-version="2.6.2.12296" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="D:\KafkaRepo\Kafka\OpenCover\f862feab-dc83-4348-8eb5-abe9ee969d82" machine-name="W10ENT" user="admin" user-domain="W10ENT" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\KafkaRepo\Kafka\KafkaTest\bin\x64\Debug\KafkaTest.dll" executed="True" result="Failure" success="False" time="0.654" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="KafkaTest" executed="True" result="Failure" success="False" time="0.596" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="BrokerTest" executed="True" result="Failure" success="False" time="0.594" asserts="0">
+            <results>
+              <test-case name="KafkaTest.BrokerTest.PublishMessageWithNullValue" executed="True" result="Success" success="True" time="0.277" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.PublishStream" executed="True" result="Success" success="True" time="0.053" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.PublishStreamWithNullValues" executed="True" result="Failure" success="False" time="0.108" asserts="0">
+                <failure>
+                  <message><![CDATA[  Expected: -1
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at KafkaTest.BrokerTest.PublishStreamWithNullValues() in D:\KafkaRepo\Kafka\KafkaTest\BrokerTest.cs:line 105
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="KafkaTest.BrokerTest.PublishWhenTopicDidNotExistTest" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.PublishWhenTopicExist" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestMessageWithInvalidOffset" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestMessageWithInvalidTopic" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestMessageWithNullParametar" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestMessageWithValidParametars" executed="True" result="Success" success="True" time="0.017" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestStream" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestStreamWithBadCount" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.RequestStreamWithNullValues" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerTest.TopicCountTest" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

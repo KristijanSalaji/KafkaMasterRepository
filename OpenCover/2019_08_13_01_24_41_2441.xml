@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\KafkaRepo\Kafka\KafkaTest\bin\x64\Debug\KafkaTest.dll" total="1" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2019-08-13" time="13:24:45">
+  <environment nunit-version="2.6.2.12296" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="D:\KafkaRepo\Kafka\OpenCover\a8aed6f8-d45e-49a9-a46c-4d1113c4c2b0" machine-name="W10ENT" user="admin" user-domain="W10ENT" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\KafkaRepo\Kafka\KafkaTest\bin\x64\Debug\KafkaTest.dll" executed="True" result="Success" success="True" time="0.180" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="KafkaTest" executed="True" result="Success" success="True" time="0.116" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="BrokerTest" executed="True" result="Success" success="True" time="0.114" asserts="0">
+            <results>
+              <test-case name="KafkaTest.BrokerTest.PublishTest" executed="True" result="Success" success="True" time="0.097" asserts="1" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
