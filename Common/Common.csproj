@@ -47,10 +47,14 @@
     <Compile Include="CallbackHandler\ICallbackHandler.cs" />
     <Compile Include="Converter\BinaryConverter.cs" />
     <Compile Include="Enums\KafkaTopic.cs" />
+    <Compile Include="Implementation\ReplicationService.cs" />
     <Compile Include="Interfaces\IBroker.cs" />
     <Compile Include="Interfaces\IConsumer.cs" />
     <Compile Include="Interfaces\IProducer.cs" />
+    <Compile Include="Interfaces\IReplicationClient.cs" />
+    <Compile Include="Interfaces\IReplicationClientCallback.cs" />
     <Compile Include="Interfaces\IReplicationService.cs" />
+    <Compile Include="Interfaces\IReplicationServiceCallback.cs" />
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Record.cs" />
     <Compile Include="Model\SingleRequest.cs" />

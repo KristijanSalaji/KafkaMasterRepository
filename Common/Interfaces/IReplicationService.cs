@@ -1,11 +1,15 @@
-﻿using System.ServiceModel;
+﻿using System.Collections.Generic;
+using System.ServiceModel;
 
 namespace Common.Interfaces
 {
-	[ServiceContract]
+	[ServiceContract(CallbackContract = typeof(IReplicationServiceCallback<>))]
 	public interface IReplicationService
 	{
 		[OperationContract]
-		void IntegrityUpdate();
+		byte[] ForwardIntegrityUpdate();
+
+		[OperationContract]
+		bool RegisterToPartner();
 	}
 }
