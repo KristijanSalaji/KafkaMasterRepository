@@ -154,6 +154,7 @@ namespace Common.Implementation
 			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
 
 			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
+			replicationClientProxy.DeliverReplicaEvent += WriteRecord;
 			replicationClientProxy.RegisterToReplicationService();
 		}
 
@@ -181,9 +182,9 @@ namespace Common.Implementation
 
 				streamData[message.Topic].Add(record);
 
-				streamDataLocker.ExitWriteLock();
-
 				if (state == State.Hot) replicationClientProxy.SendReplica(message);
+
+				streamDataLocker.ExitWriteLock();
 			}
 			else
 			{

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceModel;
 using Common.Interfaces;
 
@@ -8,6 +9,26 @@ namespace Common.Proxy
 	{
 
 		private IReplicationClient<R> proxy;
+
+		#region Deliver replica event
+
+		public delegate void DeliverReplicaDelegate(R replication);
+
+		private event DeliverReplicaDelegate deliverReplicaEvent;
+
+		public event DeliverReplicaDelegate DeliverReplicaEvent
+		{
+			add
+			{
+				if (deliverReplicaEvent == null || !deliverReplicaEvent.GetInvocationList().Contains(value))
+				{
+					deliverReplicaEvent += value;
+				}
+			}
+			remove { deliverReplicaEvent -= value; }
+		}
+
+		#endregion
 
 		public ReplicationClientProxy(string ipAddress, string port, string endpoint)
 		{
@@ -65,7 +86,10 @@ namespace Common.Proxy
 
 		public bool DeliverReplica(R replication)
 		{
-			throw new NotImplementedException();
+			if (deliverReplicaEvent == null) return false;
+
+			deliverReplicaEvent.Invoke(replication);
+			return true;
 		}
 
 		public byte[] GetIntegrityUpdate()

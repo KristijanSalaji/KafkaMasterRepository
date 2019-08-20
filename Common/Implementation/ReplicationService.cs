@@ -34,7 +34,13 @@ namespace Common.Implementation
 			{
 				partnerServiceProxy = new ReplicationServiceProxy<R>(ConfigurationManager.AppSettings["partnerIpAddress"], ConfigurationManager.AppSettings["partnerPort"], "replication");
 				partnerServiceProxy.RegisterToPartner();
+				partnerServiceProxy.ForwardReplicaEvent += DeliverReplica;
 			}
+		}
+
+		private void DeliverReplica(R replication)
+		{
+			if (clientCallback != null) clientCallback.DeliverReplica(replication);
 		}
 
 		#region IReplicationService implementation
@@ -60,7 +66,7 @@ namespace Common.Implementation
 
 		public bool ForwardReplica(R replication)
 		{
-			return partnerCallback.ForwardReplica(replication);
+			return clientCallback.DeliverReplica(replication);
 		}
 
 		#endregion
