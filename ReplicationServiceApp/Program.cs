@@ -14,30 +14,36 @@ namespace ReplicationServiceApp
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("Initialize replication service host...");
+			Console.WriteLine("Initialize hosts...");
 			var state = (State)Enum.Parse(typeof(State), ConfigurationManager.AppSettings["state"]);
-			var replicationServiceHost = InitializeHost(state);
+			ReplicationServiceHost replicationServiceHost;
+			ReplicationClientHost<Message<KafkaTopic>> replicationClientHost;
+
+			InitializeHosts(state,out replicationServiceHost,out replicationClientHost);
 
 			replicationServiceHost.Open();
+			replicationClientHost.Open();
 
 			Console.WriteLine("Press any key for exit...");
 			Console.ReadLine();
 
 			replicationServiceHost.Close();
+			replicationClientHost.Close();
 		}
 
-		private static ReplicationServiceHost InitializeHost(State state)
+		private static void InitializeHosts(State state, out ReplicationServiceHost replicationServiceHost, out ReplicationClientHost<Message<KafkaTopic>> replicationClientHost) 
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
-			var replicationServiceHost = new ReplicationServiceHost();
 			var replicationService = new ReplicationService<Message<KafkaTopic>>(state);
 
-
+			replicationServiceHost = new ReplicationServiceHost();
 			replicationServiceHost.Initialize(ipAddress, port, endpoint, replicationService);
-			return replicationServiceHost;
+
+			replicationClientHost= new ReplicationClientHost<Message<KafkaTopic>>();
+			replicationClientHost.Initialize(ipAddress, port, endpoint, replicationService);
 		}
 	}
 }

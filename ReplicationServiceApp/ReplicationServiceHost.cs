@@ -46,7 +46,7 @@ namespace ReplicationServiceApp
 			}
 			catch (CommunicationObjectFaultedException ex)
 			{
-				Console.WriteLine($"Error while oppening replication service host: {ex.Message}");
+				Console.WriteLine($"Error while opening replication service host: {ex.Message}");
 			}
 		}
 

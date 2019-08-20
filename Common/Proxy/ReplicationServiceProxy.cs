@@ -68,7 +68,6 @@ namespace Common.Proxy
 
 		#endregion
 
-
 		#region IReplicationServiceCallback
 
 		public bool ForwardReplica(R replication)

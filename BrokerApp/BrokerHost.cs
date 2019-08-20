@@ -43,7 +43,7 @@ namespace BrokerApp
 			}
 			catch (CommunicationObjectFaultedException ex)
 			{
-				Console.WriteLine($"Error while oppening broker host: {ex.Message}");
+				Console.WriteLine($"Error while opening broker host: {ex.Message}");
 			}
 		}
 
