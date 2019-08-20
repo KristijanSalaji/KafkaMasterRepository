@@ -1,33 +1,52 @@
 ﻿using System;
+using System.ServiceModel;
 using Common.CallbackHandler;
+using Common.Enums;
 using Common.Interfaces;
+using Common.Proxy;
+using System.Configuration;
 
 namespace Common.Implementation
 {
+	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class ReplicationService<R> : IReplicationService, IReplicationServiceCallback<R>, IReplicationClient<R>
 	{
-		private IReplicationClientCallback<R> client; //broker
-		private IReplicationServiceCallback<R> partner;
+		//public State State { get; set; }
+
+		private State state;
+
+		private IReplicationClientCallback<R> clientCallback; //broker
+		private IReplicationServiceCallback<R> partnerCallback;
 
 		private readonly ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler;
 		private readonly ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler;
 
-		public ReplicationService()
+		private readonly ReplicationServiceProxy<R> partnerServiceProxy;
+
+		public ReplicationService(State state)
 		{
+			this.state = state;
 			clientCallbackHandler = new CallbackHandler<IReplicationClientCallback<R>>();
 			serviceCallbackHandler = new CallbackHandler<IReplicationServiceCallback<R>>();
+			if (this.state == State.StandBy)
+			{
+				partnerServiceProxy = new ReplicationServiceProxy<R>(ConfigurationManager.AppSettings["partnerIpAddress"], ConfigurationManager.AppSettings["partnerPort"], "replication");
+				partnerServiceProxy.RegisterToPartner();
+			}
 		}
 
 		#region IReplicationService implementation
 
+		//izlozene metode prema standby rs
+
 		public byte[] ForwardIntegrityUpdate()
 		{
-			return client.GetIntegrityUpdate();
+			return clientCallback.GetIntegrityUpdate();
 		}
 
 		public bool RegisterToPartner()
 		{
-			partner = serviceCallbackHandler.GetCallback();
+			partnerCallback = serviceCallbackHandler.GetCallback();
 			return true;
 		}
 
@@ -35,30 +54,35 @@ namespace Common.Implementation
 
 		#region IReplicationServiceCallback Implementation
 
+		//hot rs koristi ove metode da bi prosledio podatke standby rs
+
 		public bool ForwardReplica(R replication)
 		{
-			return partner.ForwardReplica(replication);
+			return partnerCallback.ForwardReplica(replication);
 		}
 
 		#endregion
 
 		#region IReplicationClient implementation
 
+		// izlozene metode prema klijentu (u nasem slucaju je to broker)
+
+		// hot strana poziva
 		public bool RegisterToReplicationService()
 		{
-			client = clientCallbackHandler.GetCallback();
+			clientCallback = clientCallbackHandler.GetCallback();
 			return true;
 		}
 
 		public bool SendReplica(R replication)
 		{
-			return partner.ForwardReplica(replication);
+			return partnerCallback.ForwardReplica(replication);
 		}
 
+		//standby strana poziva
 		public byte[] RequestIntegrityUpdate()
 		{
-			//proxy forward integrity update
-			return new byte[1];
+			return partnerServiceProxy.ForwardIntegrityUpdate();
 		}
 
 		#endregion

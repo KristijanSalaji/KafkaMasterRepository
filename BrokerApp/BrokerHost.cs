@@ -15,7 +15,7 @@ namespace BrokerApp
 			
 		}
 
-		public bool Initialize(string address, string port, string endpoint, Broker<T> broker)
+		public bool Initialize(string address, string port, string endpoint, IBroker<T> broker)
 		{
 			try
 			{
