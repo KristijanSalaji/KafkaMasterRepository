@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Dynamic;
 using Common.Enums;
+using Common.Implementation;
 
 namespace BrokerApp
 {
@@ -25,9 +26,10 @@ namespace BrokerApp
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
+			var state =(State)Enum.Parse( typeof(State),ConfigurationManager.AppSettings["state"]);
 
 			var brokerHost = new BrokerHost<KafkaTopic>();
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(state);
 
 			broker.AddTopic(KafkaTopic.FirstT);
 			broker.AddTopic(KafkaTopic.SecondT);

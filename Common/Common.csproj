@@ -49,6 +49,7 @@
     <Compile Include="Converter\BinaryConverter.cs" />
     <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\KafkaTopic.cs" />
+    <Compile Include="Implementation\Broker.cs" />
     <Compile Include="Implementation\ReplicationService.cs" />
     <Compile Include="Interfaces\IBroker.cs" />
     <Compile Include="Interfaces\IConsumer.cs" />

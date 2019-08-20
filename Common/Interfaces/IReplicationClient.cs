@@ -1,8 +1,11 @@
 ﻿using System.ServiceModel;
+using System.ServiceModel.Channels;
+using Common.Enums;
+using Common.Model;
 
 namespace Common.Interfaces
 {
-	[ServiceContract]
+	[ServiceContract(CallbackContract = typeof(IReplicationClientCallback<Message<KafkaTopic>>))]
 	public interface IReplicationClient<R>
 	{
 		[OperationContract]

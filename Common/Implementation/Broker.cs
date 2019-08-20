@@ -1,26 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
-using Common.CallbackHandler;
 using Common.Converter;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Model;
+using Common.Proxy;
 
-namespace BrokerApp
+namespace Common.Implementation
 {
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class Broker<T> : IBroker<T>
 	{
 		private readonly IDictionary<T, List<Record<T>>> streamData;
-
 		private readonly ReaderWriterLockSlim streamDataLocker;
+		private ReplicationClientProxy<Message<T>> replicationClientProxy;
+		private State state;
 
-		public Broker()
+		public Broker(State state)
 		{
+			this.state = state;
+
 			streamData = new Dictionary<T, List<Record<T>>>();
 			streamDataLocker = new ReaderWriterLockSlim();
+			InitializeReplicationClientProxy();
 		}
 
 		#region Contract implementation
@@ -66,7 +71,7 @@ namespace BrokerApp
 
 				if (record != null)
 				{
-					return new Message<T>() {Topic = record.Topic, Data = record.Data};
+					return new Message<T>() { Topic = record.Topic, Data = record.Data };
 				}
 
 				return null;
@@ -98,7 +103,7 @@ namespace BrokerApp
 						break;
 					}
 				}
-				
+
 				return retVal;
 			}
 			catch (Exception e)
@@ -142,31 +147,43 @@ namespace BrokerApp
 
 		#region Private methods
 
+		private void InitializeReplicationClientProxy()
+		{
+			var ipAddress = ConfigurationManager.AppSettings["replicationServiceIpAddress"];
+			var port = ConfigurationManager.AppSettings["replicationServicePort"];
+			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
+
+			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
+			replicationClientProxy.RegisterToReplicationService();
+		}
+
 		private void CheckRequest(SingleRequest<T> request)
 		{
-			if(request == null) throw new ArgumentNullException("Request can not be null!");
+			if (request == null) throw new ArgumentNullException("Request can not be null!");
 		}
 
 		private void CheckMessage(Message<T> message)
 		{
-			if(message == null) throw new ArgumentNullException("message can not be null!");
+			if (message == null) throw new ArgumentNullException("message can not be null!");
 		}
 
 		private void WriteRecord(Message<T> message)
 		{
 			CheckMessage(message);
 
-			streamDataLocker.EnterWriteLock();
-
 			var record = new Record<T>()
-				{ Topic = message.Topic, Data = message.Data, Offset = streamData.ContainsKey(message.Topic) ? streamData[message.Topic].Count : 0 };
+			{ Topic = message.Topic, Data = message.Data, Offset = streamData.ContainsKey(message.Topic) ? streamData[message.Topic].Count : 0 };
 
 
 			if (streamData.ContainsKey(record.Topic))
 			{
+				streamDataLocker.EnterWriteLock();
+
 				streamData[message.Topic].Add(record);
 
 				streamDataLocker.ExitWriteLock();
+
+				if (state == State.Hot) replicationClientProxy.SendReplica(message);
 			}
 			else
 			{

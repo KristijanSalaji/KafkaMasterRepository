@@ -26,8 +26,10 @@ namespace Common.Implementation
 		public ReplicationService(State state)
 		{
 			this.state = state;
+
 			clientCallbackHandler = new CallbackHandler<IReplicationClientCallback<R>>();
 			serviceCallbackHandler = new CallbackHandler<IReplicationServiceCallback<R>>();
+
 			if (this.state == State.StandBy)
 			{
 				partnerServiceProxy = new ReplicationServiceProxy<R>(ConfigurationManager.AppSettings["partnerIpAddress"], ConfigurationManager.AppSettings["partnerPort"], "replication");
@@ -76,6 +78,8 @@ namespace Common.Implementation
 
 		public bool SendReplica(R replication)
 		{
+			if (partnerCallback == null) return false;
+			
 			return partnerCallback.ForwardReplica(replication);
 		}
 

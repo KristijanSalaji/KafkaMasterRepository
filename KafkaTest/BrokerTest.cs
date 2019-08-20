@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http;
-using BrokerApp;
 using Common.Converter;
 using Common.Enums;
+using Common.Implementation;
 using Common.Model;
 using NUnit.Framework;
 
@@ -16,7 +15,7 @@ namespace KafkaTest
 		[Test]
 		public void PublishWhenTopicDidNotExistTest()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var testDataString = "TEST";
 			var response = broker.Publish(new Message<KafkaTopic>()
@@ -28,7 +27,7 @@ namespace KafkaTest
 		[Test]
 		public void PublishMessageWithNullValue()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var response = broker.Publish(null);
 
@@ -38,7 +37,7 @@ namespace KafkaTest
 		[Test]
 		public void PublishWhenTopicExist()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			var testDataString = "TEST";
@@ -56,7 +55,7 @@ namespace KafkaTest
 		[Test]
 		public void PublishStream()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			int count = 20;
@@ -83,7 +82,7 @@ namespace KafkaTest
 		[Test]
 		public void PublishStreamWithNullValues()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			int count = 20;
 
@@ -110,7 +109,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestMessageWithInvalidTopic()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0});
 
@@ -120,7 +119,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestMessageWithInvalidOffset()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			var testDataString = "TEST";
@@ -137,7 +136,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestMessageWithValidParametars()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			var testDataString = "TEST";
@@ -155,7 +154,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestMessageWithNullParametar()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var response = broker.Request(null);
 
@@ -166,7 +165,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestStream()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			int count = 20;
@@ -197,7 +196,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestStreamWithNullValues()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var retVal = broker.RequestStream(null);
 
@@ -207,7 +206,7 @@ namespace KafkaTest
 		[Test]
 		public void RequestStreamWithBadCount()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			int count = 10;
@@ -242,7 +241,7 @@ namespace KafkaTest
 		[Test]
 		public void TopicCountTest()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 			broker.AddTopic(KafkaTopic.FirstT);
 
 			var testDataString = "TEST";
@@ -257,7 +256,7 @@ namespace KafkaTest
 		[Test]
 		public void AddTopic()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var result = broker.AddTopic(KafkaTopic.FirstT);
 
@@ -267,7 +266,7 @@ namespace KafkaTest
 		[Test]
 		public void DeleteTopic()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var result = broker.AddTopic(KafkaTopic.FirstT);
 
@@ -281,7 +280,7 @@ namespace KafkaTest
 		[Test]
 		public void AddTopicWhenTopicIsAlreadyAdded()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var result = broker.AddTopic(KafkaTopic.FirstT);
 
@@ -295,7 +294,7 @@ namespace KafkaTest
 		[Test]
 		public void DeleteTopicWhichDontExist()
 		{
-			var broker = new Broker<KafkaTopic>();
+			var broker = new Broker<KafkaTopic>(State.Hot);
 
 			var result = broker.DeleteTopic(KafkaTopic.FirstT);
 
