@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
+using Common.CallbackHandler;
 using Common.Converter;
 using Common.Enums;
 using Common.Interfaces;
@@ -18,6 +19,7 @@ namespace Common.Implementation
 		private readonly ReaderWriterLockSlim streamDataLocker;
 		private ReplicationClientProxy<Message<T>> replicationClientProxy;
 		private State state;
+		private readonly CallbackHandler<INotifyCallback> clientCallbackHandler;
 
 		public Broker(State state)
 		{
@@ -25,23 +27,24 @@ namespace Common.Implementation
 
 			streamData = new Dictionary<T, List<Record<T>>>();
 			streamDataLocker = new ReaderWriterLockSlim();
+			clientCallbackHandler = new CallbackHandler<INotifyCallback>();
 			InitializeReplicationClientProxy();
 		}
 
 		#region Contract implementation
 
-		public bool Publish(Message<T> message)
+		public void Publish(Message<T> message)
 		{
+			Thread.Sleep(10000);
 			try
 			{
 				WriteRecord(message);
-
-				return true;
+				clientCallbackHandler.GetCallback().Notify(message.Data.ToObject<string>());
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while publishing message: {e.Message}");
-				return false;
+				throw;
 			}
 		}
 

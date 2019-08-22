@@ -53,6 +53,7 @@
     <Compile Include="Implementation\ReplicationService.cs" />
     <Compile Include="Interfaces\IBroker.cs" />
     <Compile Include="Interfaces\IConsumer.cs" />
+    <Compile Include="Interfaces\INotifyCallback.cs" />
     <Compile Include="Interfaces\IProducer.cs" />
     <Compile Include="Interfaces\IReplicationClient.cs" />
     <Compile Include="Interfaces\IReplicationClientCallback.cs" />

@@ -7,8 +7,8 @@ namespace Common.Interfaces
 	[ServiceContract]
 	public interface IProducer<T>
 	{
-		[OperationContract]
-		bool Publish(Message<T> message);
+		[OperationContract(IsOneWay = true)]
+		void Publish(Message<T> message);
 
 		[OperationContract]
 		bool PublishStream(List<Message<T>> messages);

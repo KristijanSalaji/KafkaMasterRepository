@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Dynamic;
+using System.Threading;
 using Common.Enums;
 using Common.Implementation;
 
@@ -10,6 +11,7 @@ namespace BrokerApp
 	{
 		static void Main(string[] args)
 		{
+			Thread.Sleep(2000);
 			Console.WriteLine("Initialize broker host...");
 			var brokerHost = InitializeHost();
 

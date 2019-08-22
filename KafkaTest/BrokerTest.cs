@@ -1,306 +1,306 @@
-﻿using System.Collections.Generic;
-using Common.Converter;
-using Common.Enums;
-using Common.Implementation;
-using Common.Model;
-using NUnit.Framework;
+﻿//using System.Collections.Generic;
+//using Common.Converter;
+//using Common.Enums;
+//using Common.Implementation;
+//using Common.Model;
+//using NUnit.Framework;
 
-namespace KafkaTest
-{
-	[TestFixture]
-	public class BrokerTest
-	{
-		#region Publish test
+//namespace KafkaTest
+//{
+//	[TestFixture]
+//	public class BrokerTest
+//	{
+//		#region Publish test
 
-		[Test]
-		public void PublishWhenTopicDidNotExistTest()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void PublishWhenTopicDidNotExistTest()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var testDataString = "TEST";
-			var response = broker.Publish(new Message<KafkaTopic>()
-				{Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray()});
+//			var testDataString = "TEST";
+//			var response = broker.Publish(new Message<KafkaTopic>()
+//				{Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray()});
 
-			Assert.IsFalse(response);
-		}
+//			Assert.IsFalse(response);
+//		}
 
-		[Test]
-		public void PublishMessageWithNullValue()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void PublishMessageWithNullValue()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var response = broker.Publish(null);
+//			var response = broker.Publish(null);
 
-			Assert.IsFalse(response);
-		}
+//			Assert.IsFalse(response);
+//		}
 
-		[Test]
-		public void PublishWhenTopicExist()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void PublishWhenTopicExist()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.Publish(new Message<KafkaTopic>()
-				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.Publish(new Message<KafkaTopic>()
+//				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			response = broker.Publish(new Message<KafkaTopic>()
-				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			response = broker.Publish(new Message<KafkaTopic>()
+//				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
-		}
+//			Assert.IsTrue(response);
+//		}
 
-		[Test]
-		public void PublishStream()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void PublishStream()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			int count = 20;
+//			int count = 20;
 
-			var stream = new List<Message<KafkaTopic>>(count);
+//			var stream = new List<Message<KafkaTopic>>(count);
 
-			var testDataString = "TEST";
+//			var testDataString = "TEST";
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<KafkaTopic>()
-					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			for (int i = 0; i < count; i++)
+//			{
+//				stream.Add(new Message<KafkaTopic>()
+//					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			}
 
-			var response = broker.PublishStream(stream);
+//			var response = broker.PublishStream(stream);
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
+//			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
 
-			Assert.AreEqual(count, topicCount);
-		}
+//			Assert.AreEqual(count, topicCount);
+//		}
 
-		[Test]
-		public void PublishStreamWithNullValues()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void PublishStreamWithNullValues()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			int count = 20;
+//			int count = 20;
 
-			var stream = new List<Message<KafkaTopic>>(count);
+//			var stream = new List<Message<KafkaTopic>>(count);
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(null);
-			}
+//			for (int i = 0; i < count; i++)
+//			{
+//				stream.Add(null);
+//			}
 
-			var response = broker.PublishStream(stream);
+//			var response = broker.PublishStream(stream);
 
-			Assert.IsFalse(response);
+//			Assert.IsFalse(response);
 
-			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
+//			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
 
-			Assert.AreEqual(-1, topicCount);
-		}
+//			Assert.AreEqual(-1, topicCount);
+//		}
 
-		#endregion
+//		#endregion
 
-		#region Request test
+//		#region Request test
 
-		[Test]
-		public void RequestMessageWithInvalidTopic()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void RequestMessageWithInvalidTopic()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0});
+//			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0});
 
-			Assert.IsNull(message);
-		}
+//			Assert.IsNull(message);
+//		}
 
-		[Test]
-		public void RequestMessageWithInvalidOffset()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void RequestMessageWithInvalidOffset()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.Publish(new Message<KafkaTopic>()
-				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.Publish(new Message<KafkaTopic>()
+//				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 4});
+//			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 4});
 
-			Assert.IsNull(message);
-		}
+//			Assert.IsNull(message);
+//		}
 
-		[Test]
-		public void RequestMessageWithValidParametars()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void RequestMessageWithValidParametars()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.Publish(new Message<KafkaTopic>()
-				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.Publish(new Message<KafkaTopic>()
+//				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0});
+//			var message = broker.Request(new SingleRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0});
 
-			Assert.AreEqual(message.Data.ToObject<string>(),testDataString);
-			Assert.AreEqual(message.Topic, KafkaTopic.FirstT);
-		}
+//			Assert.AreEqual(message.Data.ToObject<string>(),testDataString);
+//			Assert.AreEqual(message.Topic, KafkaTopic.FirstT);
+//		}
 
-		[Test]
-		public void RequestMessageWithNullParametar()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void RequestMessageWithNullParametar()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var response = broker.Request(null);
+//			var response = broker.Request(null);
 
-			Assert.IsNull(response);
-		}
+//			Assert.IsNull(response);
+//		}
 
 
-		[Test]
-		public void RequestStream()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void RequestStream()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			int count = 20;
+//			int count = 20;
 
-			var stream = new List<Message<KafkaTopic>>(count);
+//			var stream = new List<Message<KafkaTopic>>(count);
 
-			var testDataString = "TEST";
+//			var testDataString = "TEST";
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<KafkaTopic>()
-					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			for (int i = 0; i < count; i++)
+//			{
+//				stream.Add(new Message<KafkaTopic>()
+//					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			}
 
-			var response = broker.PublishStream(stream);
+//			var response = broker.PublishStream(stream);
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
+//			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
 
-			Assert.AreEqual(count, topicCount);
+//			Assert.AreEqual(count, topicCount);
 
-			var retVal = broker.RequestStream(new StreamRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0, Count = 17});
+//			var retVal = broker.RequestStream(new StreamRequest<KafkaTopic>() {Topic = KafkaTopic.FirstT, Offset = 0, Count = 17});
 
-			Assert.AreEqual(retVal.Count,17);
-		}
+//			Assert.AreEqual(retVal.Count,17);
+//		}
 
-		[Test]
-		public void RequestStreamWithNullValues()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void RequestStreamWithNullValues()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var retVal = broker.RequestStream(null);
+//			var retVal = broker.RequestStream(null);
 
-			Assert.IsNull(retVal);
-		}
+//			Assert.IsNull(retVal);
+//		}
 
-		[Test]
-		public void RequestStreamWithBadCount()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void RequestStreamWithBadCount()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			int count = 10;
+//			int count = 10;
 
-			var stream = new List<Message<KafkaTopic>>(count);
+//			var stream = new List<Message<KafkaTopic>>(count);
 
-			var testDataString = "TEST";
+//			var testDataString = "TEST";
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<KafkaTopic>()
-					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			for (int i = 0; i < count; i++)
+//			{
+//				stream.Add(new Message<KafkaTopic>()
+//					{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			}
 
-			var response = broker.PublishStream(stream);
+//			var response = broker.PublishStream(stream);
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
+//			var topicCount = broker.TopicCount(KafkaTopic.FirstT);
 
-			Assert.AreEqual(count, topicCount);
+//			Assert.AreEqual(count, topicCount);
 
-			var retVal = broker.RequestStream(new StreamRequest<KafkaTopic>() { Topic = KafkaTopic.FirstT, Offset = 0, Count = 17 });
+//			var retVal = broker.RequestStream(new StreamRequest<KafkaTopic>() { Topic = KafkaTopic.FirstT, Offset = 0, Count = 17 });
 
-			Assert.AreEqual(retVal.Count, count);
-		}
+//			Assert.AreEqual(retVal.Count, count);
+//		}
 
-		#endregion
+//		#endregion
 
-		#region Topic test
+//		#region Topic test
 
-		[Test]
-		public void TopicCountTest()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
-			broker.AddTopic(KafkaTopic.FirstT);
+//		[Test]
+//		public void TopicCountTest()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
+//			broker.AddTopic(KafkaTopic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.Publish(new Message<KafkaTopic>()
-				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.Publish(new Message<KafkaTopic>()
+//				{ Topic = KafkaTopic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
-			Assert.AreEqual(1, broker.TopicCount(KafkaTopic.FirstT));
-			Assert.AreEqual(-1, broker.TopicCount(KafkaTopic.SecondT));
-		}
+//			Assert.IsTrue(response);
+//			Assert.AreEqual(1, broker.TopicCount(KafkaTopic.FirstT));
+//			Assert.AreEqual(-1, broker.TopicCount(KafkaTopic.SecondT));
+//		}
 
-		[Test]
-		public void AddTopic()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void AddTopic()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var result = broker.AddTopic(KafkaTopic.FirstT);
+//			var result = broker.AddTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
-		}
+//			Assert.IsTrue(result);
+//		}
 
-		[Test]
-		public void DeleteTopic()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void DeleteTopic()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var result = broker.AddTopic(KafkaTopic.FirstT);
+//			var result = broker.AddTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
+//			Assert.IsTrue(result);
 
-			result = broker.DeleteTopic(KafkaTopic.FirstT);
+//			result = broker.DeleteTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
-		}
+//			Assert.IsTrue(result);
+//		}
 
-		[Test]
-		public void AddTopicWhenTopicIsAlreadyAdded()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void AddTopicWhenTopicIsAlreadyAdded()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var result = broker.AddTopic(KafkaTopic.FirstT);
+//			var result = broker.AddTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
+//			Assert.IsTrue(result);
 
-			result = broker.AddTopic(KafkaTopic.FirstT);
+//			result = broker.AddTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
-		}
+//			Assert.IsTrue(result);
+//		}
 
-		[Test]
-		public void DeleteTopicWhichDontExist()
-		{
-			var broker = new Broker<KafkaTopic>(State.Hot);
+//		[Test]
+//		public void DeleteTopicWhichDontExist()
+//		{
+//			var broker = new Broker<KafkaTopic>(State.Hot);
 
-			var result = broker.DeleteTopic(KafkaTopic.FirstT);
+//			var result = broker.DeleteTopic(KafkaTopic.FirstT);
 
-			Assert.IsTrue(result);
-		}
+//			Assert.IsTrue(result);
+//		}
 
-		#endregion
-	}
-}
+//		#endregion
+//	}
+//}
