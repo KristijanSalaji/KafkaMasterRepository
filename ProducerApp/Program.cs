@@ -18,7 +18,7 @@ namespace ProducerApp
 			waitSemaphore = new Semaphore(0,1);
 
 			Console.WriteLine("Enter topic number (0,1,2): ");
-			var topic = (KafkaTopic) Int32.Parse(Console.ReadLine());
+			var topic = (Topic) Int32.Parse(Console.ReadLine());
 
 			var t = new Thread(() => SendOne(topic));
 			t.Start();
@@ -33,14 +33,14 @@ namespace ProducerApp
 			Console.ReadLine();
 		}
 
-		private static void Work(KafkaTopic topic)
+		private static void Work(Topic topic)
 		{
-			var producer = new Producer<KafkaTopic>();
+			var producer = new Producer<Topic>();
 
 			while (decision)
 			{
 				var dataString = "Test message " + count;
-				producer.Publish(new Message<KafkaTopic>() { Topic = topic, Data = dataString.ToByteArray() });
+				producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				count++;
 				Console.WriteLine("Message {0} successfully sent", count);
@@ -50,9 +50,9 @@ namespace ProducerApp
 			}
 		}
 
-		private static void SendOne(KafkaTopic topic)
+		private static void SendOne(Topic topic)
 		{
-			var producer = new Producer<KafkaTopic>();
+			var producer = new Producer<Topic>();
 
 			Console.WriteLine("Enter name: ");
 			var name = Console.ReadLine();
@@ -62,7 +62,7 @@ namespace ProducerApp
 				count++;
 
 				var dataString = "Test message " +  count + " from " + name;
-				producer.Publish(new Message<KafkaTopic>() { Topic = topic, Data = dataString.ToByteArray() });
+				producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				Console.WriteLine("Message {0} successfully sent", count);
 				Console.ReadLine();

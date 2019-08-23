@@ -1,6 +1,6 @@
 ﻿namespace Common.Enums
 {
-	public enum KafkaTopic
+	public enum Topic
 	{
 		FirstT = 0,
 		SecondT = 1,

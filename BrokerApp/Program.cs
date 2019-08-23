@@ -23,19 +23,19 @@ namespace BrokerApp
 			brokerHost.Close();
 		}
 
-		private static BrokerHost<KafkaTopic> InitializeHost()
+		private static BrokerHost<Topic> InitializeHost()
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 			var state =(State)Enum.Parse( typeof(State),ConfigurationManager.AppSettings["state"]);
 
-			var brokerHost = new BrokerHost<KafkaTopic>();
-			var broker = new Broker<KafkaTopic>(state);
+			var brokerHost = new BrokerHost<Topic>();
+			var broker = new Broker<Topic>(state);
 
-			broker.AddTopic(KafkaTopic.FirstT);
-			broker.AddTopic(KafkaTopic.SecondT);
-			broker.AddTopic(KafkaTopic.ThirdT);
+			broker.AddTopic(Topic.FirstT);
+			broker.AddTopic(Topic.SecondT);
+			broker.AddTopic(Topic.ThirdT);
 
 			brokerHost.Initialize(ipAddress, port, endpoint, broker);
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
+using Common.Enums;
 using Common.Interfaces;
 using Common.Model;
 using Common.Proxy;
@@ -13,6 +14,7 @@ namespace ProducerApp
 	{
 		private readonly ProducerProxy<T> proxy;
 		private readonly Semaphore notifySemaphore;
+		private readonly Semaphore notifyStreamSemaphore;
 
 		public Producer()
 		{
@@ -21,22 +23,44 @@ namespace ProducerApp
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
 			notifySemaphore = new Semaphore(0,1);
+			notifyStreamSemaphore = new Semaphore(0, 1);
 
 			proxy = new ProducerProxy<T>(ipAddress, port, endpoint);
 			proxy.NotifyEvent += ProxyOnNotifyEvent;
+			proxy.NotifyStreamEvent += ProxyOnNotifyStreamEvent;
 		}
 
-		private void ProxyOnNotifyEvent(string message)
+		private void ProxyOnNotifyEvent(NotifyStatus status)
 		{
-			Console.WriteLine("Notify client with data: " + message);
-			notifySemaphore.Release(1);
+			Console.WriteLine("Notify client with status " + status);
+
+			if (status == NotifyStatus.Secceeded)
+			{
+				notifySemaphore.Release(1);
+			}
+			else
+			{
+				//TODO logika kada je status failed
+			}
 		}
 
-		public void Publish(Message<T> message)
+		private void ProxyOnNotifyStreamEvent(NotifyStatus status)
+		{
+			if (status == NotifyStatus.Secceeded)
+			{
+				notifyStreamSemaphore.Release(1);
+			}
+			else
+			{
+				//TODO logika kada je stream status failed
+			}
+		}
+
+		public void PublishAsync(Message<T> message)
 		{
 			try
 			{
-				proxy.Publish(message);
+				proxy.PublishAsync(message);
 				notifySemaphore.WaitOne();
 			}
 			catch (Exception e)
@@ -46,16 +70,17 @@ namespace ProducerApp
 			}
 		}
 
-		public bool PublishStream(List<Message<T>> messages)
+		public void PublishStreamAsync(List<Message<T>> messages)
 		{
 			try
 			{
-				return proxy.PublishStream(messages);
+				proxy.PublishStreamAsync(messages);
+				notifyStreamSemaphore.WaitOne();
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Exception while publishing message from producer: {e.Message}");
-				return false;
+				throw;
 			}
 		}
 	}

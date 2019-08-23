@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using Common.Enums;
 using Common.Interfaces;
 using Common.Model;
 
@@ -13,7 +14,7 @@ namespace Common.Proxy
 
 		#region Notify event
 
-		public delegate void NotifyDelegate(string message);
+		public delegate void NotifyDelegate(NotifyStatus status);
 
 		private event NotifyDelegate notifyEvent;
 
@@ -31,6 +32,29 @@ namespace Common.Proxy
 
 		#endregion
 
+		#region Notify Stream event
+
+		//TODO list status
+
+		public delegate void NotifyStreamDelegate(NotifyStatus status);
+
+		private event NotifyStreamDelegate notifyStreamEvent;
+
+		public event NotifyStreamDelegate NotifyStreamEvent
+		{
+			add
+			{
+				if (notifyStreamEvent == null || !notifyStreamEvent.GetInvocationList().Contains(value))
+				{
+					notifyStreamEvent += value;
+				}
+			}
+			remove { notifyStreamEvent -= value; }
+		}
+
+		#endregion
+
+
 		public ProducerProxy(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IBroker<T>>(this,
@@ -40,19 +64,27 @@ namespace Common.Proxy
 			proxy = factory.CreateChannel();
 		}
 
-		public void Notify(string message)
+		public void Notify(NotifyStatus status)
 		{
 			if (notifyEvent != null)
 			{
-				notifyEvent.Invoke(message);
+				notifyEvent.Invoke(status);
 			}
 		}
 
-		public void Publish(Message<T> message)
+		public void NotifyStream(NotifyStatus status)
+		{
+			if (notifyStreamEvent != null)
+			{
+				notifyStreamEvent.Invoke(status);
+			}
+		}
+
+		public void PublishAsync(Message<T> message)
 		{
 			try
 			{
-				proxy.Publish(message);
+				proxy.PublishAsync(message);
 			}
 			catch (Exception e)
 			{
@@ -61,16 +93,16 @@ namespace Common.Proxy
 			}
 		}
 
-		public bool PublishStream(List<Message<T>> messages)
+		public void PublishStreamAsync(List<Message<T>> messages)
 		{
 			try
 			{
-				return proxy.PublishStream(messages);
+				proxy.PublishStreamAsync(messages);
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Excpetion while publishing message stream: {e.Message}");
-				return false;
+				throw ;
 			}
 		}
 	}

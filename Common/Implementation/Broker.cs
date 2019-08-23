@@ -33,22 +33,21 @@ namespace Common.Implementation
 
 		#region Contract implementation
 
-		public void Publish(Message<T> message)
+		public void PublishAsync(Message<T> message)
 		{
-			Thread.Sleep(10000);
 			try
 			{
 				WriteRecord(message);
-				clientCallbackHandler.GetCallback().Notify(message.Data.ToObject<string>());
+				clientCallbackHandler.GetCallback().Notify(NotifyStatus.Secceeded);
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while publishing message: {e.Message}");
-				throw;
+				clientCallbackHandler.GetCallback().Notify(NotifyStatus.Failed);
 			}
 		}
 
-		public bool PublishStream(List<Message<T>> messages)
+		public void PublishStreamAsync(List<Message<T>> messages)
 		{
 			try
 			{
@@ -56,13 +55,12 @@ namespace Common.Implementation
 				{
 					WriteRecord(message);
 				}
-
-				return true;
+				clientCallbackHandler.GetCallback().NotifyStream(NotifyStatus.Secceeded);
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while publishing message: {e.Message}");
-				return false;
+				clientCallbackHandler.GetCallback().NotifyStream(NotifyStatus.Failed);
 			}
 		}
 
@@ -173,6 +171,8 @@ namespace Common.Implementation
 
 		private void WriteRecord(Message<T> message)
 		{
+			//TODO WriteRecord vraca NotifyStatus da se zna da li je poruka uspesno upisana ili ne
+
 			CheckMessage(message);
 
 			var record = new Record<T>()

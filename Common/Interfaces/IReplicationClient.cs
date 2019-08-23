@@ -5,7 +5,7 @@ using Common.Model;
 
 namespace Common.Interfaces
 {
-	[ServiceContract(CallbackContract = typeof(IReplicationClientCallback<Message<KafkaTopic>>))]
+	[ServiceContract(CallbackContract = typeof(IReplicationClientCallback<Message<Topic>>))]
 	public interface IReplicationClient<R>
 	{
 		[OperationContract]

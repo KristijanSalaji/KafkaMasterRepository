@@ -20,11 +20,11 @@
 //			proxy = factory.CreateChannel();
 //		}
 
-//		public bool Publish(Message<T> message)
+//		public bool PublishAsync(Message<T> message)
 //		{
 //			try
 //			{
-//				return proxy.Publish(message);
+//				return proxy.PublishAsync(message);
 //			}
 //			catch (Exception e)
 //			{
@@ -33,11 +33,11 @@
 //			}
 //		}
 
-//		public bool PublishStream(List<Message<T>> messages)
+//		public bool PublishStreamAsync(List<Message<T>> messages)
 //		{
 //			try
 //			{
-//				return proxy.PublishStream(messages);
+//				return proxy.PublishStreamAsync(messages);
 //			}
 //			catch (Exception e)
 //			{

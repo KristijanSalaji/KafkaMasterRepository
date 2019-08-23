@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using Common.Enums;
 
 namespace Common.Interfaces
 {
@@ -6,6 +7,10 @@ namespace Common.Interfaces
 	public interface INotifyCallback
 	{
 		[OperationContract(IsOneWay = true)]
-		void Notify(string message);
+		void Notify(NotifyStatus status);
+
+		//TODO list status
+		[OperationContract(IsOneWay = true)]
+		void NotifyStream(NotifyStatus status);
 	}
 }

@@ -47,8 +47,9 @@
     <Compile Include="CallbackHandler\CallbackHandler.cs" />
     <Compile Include="CallbackHandler\ICallbackHandler.cs" />
     <Compile Include="Converter\BinaryConverter.cs" />
+    <Compile Include="Enums\NotifyStatus.cs" />
     <Compile Include="Enums\State.cs" />
-    <Compile Include="Enums\KafkaTopic.cs" />
+    <Compile Include="Enums\Topic.cs" />
     <Compile Include="Implementation\Broker.cs" />
     <Compile Include="Implementation\ReplicationService.cs" />
     <Compile Include="Interfaces\IBroker.cs" />

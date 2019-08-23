@@ -19,7 +19,7 @@ namespace ConsumerApp
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Enter topic number (0,1,2): ");
-			var topic = (KafkaTopic)Int32.Parse(Console.ReadLine());
+			var topic = (Topic)Int32.Parse(Console.ReadLine());
 
 			var t = new Thread(() => Work(topic));
 			t.Start();
@@ -33,13 +33,13 @@ namespace ConsumerApp
 			Console.ReadLine();
 		}
 
-		private static void Work(KafkaTopic topic)
+		private static void Work(Topic topic)
 		{
-			var consumer = new Consumer<KafkaTopic>();
+			var consumer = new Consumer<Topic>();
 
 			while (decision)
 			{
-				var request = new SingleRequest<KafkaTopic>() {Topic = topic, Offset = offset};
+				var request = new SingleRequest<Topic>() {Topic = topic, Offset = offset};
 
 				var message = consumer.Request(request);
 

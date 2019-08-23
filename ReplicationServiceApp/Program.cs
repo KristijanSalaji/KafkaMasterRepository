@@ -17,7 +17,7 @@ namespace ReplicationServiceApp
 			Console.WriteLine("Initialize hosts...");
 			var state = (State)Enum.Parse(typeof(State), ConfigurationManager.AppSettings["state"]);
 			ReplicationServiceHost replicationServiceHost;
-			ReplicationClientHost<Message<KafkaTopic>> replicationClientHost;
+			ReplicationClientHost<Message<Topic>> replicationClientHost;
 
 			InitializeHosts(state,out replicationServiceHost,out replicationClientHost);
 
@@ -31,18 +31,18 @@ namespace ReplicationServiceApp
 			replicationClientHost.Close();
 		}
 
-		private static void InitializeHosts(State state, out ReplicationServiceHost replicationServiceHost, out ReplicationClientHost<Message<KafkaTopic>> replicationClientHost) 
+		private static void InitializeHosts(State state, out ReplicationServiceHost replicationServiceHost, out ReplicationClientHost<Message<Topic>> replicationClientHost) 
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
-			var replicationService = new ReplicationService<Message<KafkaTopic>>(state);
+			var replicationService = new ReplicationService<Message<Topic>>(state);
 
 			replicationServiceHost = new ReplicationServiceHost();
 			replicationServiceHost.Initialize(ipAddress, port, endpoint, replicationService);
 
-			replicationClientHost= new ReplicationClientHost<Message<KafkaTopic>>();
+			replicationClientHost= new ReplicationClientHost<Message<Topic>>();
 			replicationClientHost.Initialize(ipAddress, port, endpoint, replicationService);
 		}
 	}

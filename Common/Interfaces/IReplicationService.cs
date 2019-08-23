@@ -6,7 +6,7 @@ using Common.Model;
 
 namespace Common.Interfaces
 {
-	[ServiceContract(CallbackContract = typeof(IReplicationServiceCallback<Message<KafkaTopic>>))]
+	[ServiceContract(CallbackContract = typeof(IReplicationServiceCallback<Message<Topic>>))]
 	public interface IReplicationService
 	{
 		[OperationContract]

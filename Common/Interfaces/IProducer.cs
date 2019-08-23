@@ -8,9 +8,9 @@ namespace Common.Interfaces
 	public interface IProducer<T>
 	{
 		[OperationContract(IsOneWay = true)]
-		void Publish(Message<T> message);
+		void PublishAsync(Message<T> message);
 
-		[OperationContract]
-		bool PublishStream(List<Message<T>> messages);
+		[OperationContract(IsOneWay = true)]
+		void PublishStreamAsync(List<Message<T>> messages);
 	}
 }
