@@ -33,6 +33,8 @@ namespace BrokerApp
 			var brokerHost = new BrokerHost<Topic>();
 			var broker = new Broker<Topic>(state);
 
+			broker.InitializeReplicationClientProxy();
+
 			broker.AddTopic(Topic.FirstT);
 			broker.AddTopic(Topic.SecondT);
 			broker.AddTopic(Topic.ThirdT);

@@ -150,6 +150,17 @@ namespace Common.Implementation
 
 		#region Public methods
 
+		public void InitializeReplicationClientProxy()
+		{
+			var ipAddress = ConfigurationManager.AppSettings["replicationServiceIpAddress"];
+			var port = ConfigurationManager.AppSettings["replicationServicePort"];
+			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
+
+			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
+			replicationClientProxy.DeliverReplicaEvent += WriteRecord;
+			replicationClientProxy.RegisterToReplicationService();
+		}
+
 		public int TopicCount(T topic)
 		{
 			if (streamData.ContainsKey(topic))
@@ -179,17 +190,6 @@ namespace Common.Implementation
 		#endregion
 
 		#region Private methods
-
-		private void InitializeReplicationClientProxy()
-		{
-			var ipAddress = ConfigurationManager.AppSettings["replicationServiceIpAddress"];
-			var port = ConfigurationManager.AppSettings["replicationServicePort"];
-			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
-
-			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
-			replicationClientProxy.DeliverReplicaEvent += WriteRecord;
-			replicationClientProxy.RegisterToReplicationService();
-		}
 
 		private void CheckRequest(SingleRequest<T> request)
 		{

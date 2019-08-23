@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace KafkaTest
 {
 	[TestFixture]
-	public class BrokerTest
+	public class BrokerSyncTest
 	{
 		#region PublishSync test
 
