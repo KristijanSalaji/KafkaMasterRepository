@@ -28,7 +28,7 @@ namespace Common.Implementation
 			streamData = new Dictionary<T, List<Record<T>>>();
 			streamDataLocker = new ReaderWriterLockSlim();
 			clientCallbackHandler = new CallbackHandler<INotifyCallback>();
-			InitializeReplicationClientProxy();
+			//InitializeReplicationClientProxy();
 		}
 
 		#region Contract implementation
