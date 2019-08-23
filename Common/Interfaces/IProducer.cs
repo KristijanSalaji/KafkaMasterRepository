@@ -12,5 +12,11 @@ namespace Common.Interfaces
 
 		[OperationContract(IsOneWay = true)]
 		void PublishStreamAsync(List<Message<T>> messages);
+
+		[OperationContract]
+		bool PublishSync(Message<T> message);
+
+		[OperationContract]
+		bool PublishStreamSync(List<Message<T>> messages);
 	}
 }

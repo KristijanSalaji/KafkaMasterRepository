@@ -64,6 +64,38 @@ namespace Common.Implementation
 			}
 		}
 
+		public bool PublishSync(Message<T> message)
+		{
+			try
+			{
+				WriteRecord(message);
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Error while publishing message: {e.Message}");
+				return false;
+			}
+		}
+
+		public bool PublishStreamSync(List<Message<T>> messages)
+		{
+			try
+			{
+				foreach (var message in messages)
+				{
+					WriteRecord(message);
+				}
+
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Error while publishing message: {e.Message}");
+				return false;
+			}
+		}
+
 		public Message<T> Request(SingleRequest<T> request)
 		{
 			try

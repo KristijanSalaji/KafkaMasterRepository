@@ -54,7 +54,6 @@ namespace Common.Proxy
 
 		#endregion
 
-
 		public ProducerProxy(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IBroker<T>>(this,
@@ -104,6 +103,16 @@ namespace Common.Proxy
 				Console.WriteLine($"Excpetion while publishing message stream: {e.Message}");
 				throw ;
 			}
+		}
+
+		public bool PublishSync(Message<T> message)
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool PublishStreamSync(List<Message<T>> messages)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

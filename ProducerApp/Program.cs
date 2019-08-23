@@ -69,7 +69,7 @@ namespace ProducerApp
 				Console.ReadLine();
 			}
 
-			waitSemaphore.Release(1);
+			//waitSemaphore.Release(1);
 		}
 	}
 }

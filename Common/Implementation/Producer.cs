@@ -82,5 +82,30 @@ namespace Common.Implementation
 				throw;
 			}
 		}
+
+		public bool PublishSync(Message<T> message)
+		{
+			try
+			{
+				return proxy.PublishSync(message); }
+			catch (Exception e)
+			{
+				Console.WriteLine($"Exception while publishing message from producer: {e.Message}");
+				return false;
+			}
+		}
+
+		public bool PublishStreamSync(List<Message<T>> messages)
+		{
+			try
+			{
+				return proxy.PublishStreamSync(messages);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Exception while publishing message from producer: {e.Message}");
+				return false;
+			}
+		}
 	}
 }
