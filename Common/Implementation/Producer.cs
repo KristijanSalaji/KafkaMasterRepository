@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
@@ -8,7 +7,7 @@ using Common.Interfaces;
 using Common.Model;
 using Common.Proxy;
 
-namespace ProducerApp
+namespace Common.Implementation
 {
 	public class Producer<T> : IProducer<T>
 	{
@@ -22,7 +21,7 @@ namespace ProducerApp
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
-			notifySemaphore = new Semaphore(0,1);
+			notifySemaphore = new Semaphore(0, 1);
 			notifyStreamSemaphore = new Semaphore(0, 1);
 
 			proxy = new ProducerProxy<T>(ipAddress, port, endpoint);

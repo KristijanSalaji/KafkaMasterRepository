@@ -1,14 +1,13 @@
-﻿using Common.Enums;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using Common.Interfaces;
 using Common.Model;
 using Common.Proxy;
-using System;
-using System.Configuration;
-using System.Collections.Generic;
 
-namespace ConsumerApp
+namespace Common.Implementation
 {
-	class Consumer<T> : IConsumer<T>
+	public class Consumer<T> : IConsumer<T>
 	{
 		private readonly ConsumerProxy<T> proxy;
 

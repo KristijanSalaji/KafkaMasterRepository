@@ -51,6 +51,8 @@
     <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\Topic.cs" />
     <Compile Include="Implementation\Broker.cs" />
+    <Compile Include="Implementation\Consumer.cs" />
+    <Compile Include="Implementation\Producer.cs" />
     <Compile Include="Implementation\ReplicationService.cs" />
     <Compile Include="Interfaces\IBroker.cs" />
     <Compile Include="Interfaces\IConsumer.cs" />

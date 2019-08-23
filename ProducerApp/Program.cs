@@ -3,6 +3,7 @@ using Common.Enums;
 using Common.Model;
 using System;
 using System.Threading;
+using Common.Implementation;
 
 namespace ProducerApp
 {

@@ -1,11 +1,8 @@
-﻿using Common.Converter;
-using Common.Enums;
+﻿using Common.Enums;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using Common.Converter;
+using Common.Implementation;
 using Common.Model;
 
 namespace ConsumerApp
