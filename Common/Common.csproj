@@ -76,7 +76,7 @@
     <Compile Include="Proxy\ReplicationServiceProxy.cs" />
     <Compile Include="Proxy\StreamProxy.cs" />
     <Compile Include="Proxy\ConsumerProxy.cs" />
-    <Compile Include="Proxy\ProducerProxy.cs" />
+    <Compile Include="Proxy\BrokerPublishProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

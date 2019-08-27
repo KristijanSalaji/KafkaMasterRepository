@@ -6,7 +6,7 @@ using Common.Model;
 
 namespace Common.Interfaces
 {
-	[ServiceContract]
+	[ServiceContract(CallbackContract = typeof(INotifyCallback))]
 	public interface IPublishManager<T>
 	{
 		[OperationContract(IsOneWay = true)]

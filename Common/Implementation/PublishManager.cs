@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.ServiceModel;
 using System.Threading;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Model;
 using Common.Proxy;
 using Common.CallbackHandler;
+using Common.Converter;
 
 namespace Common.Implementation
 {
+	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class PublishManager<T> : IPublishManager<T>
 	{
 		public bool SendData { get; set; }
 
 		private readonly Queue<Message<T>> asyncQueue;
-		private ProducerProxy<T> proxy;
+		private BrokerPublishProxy<T> brokerPublishProxy;
 		private readonly Semaphore notifySemaphore;
 		private readonly CallbackHandler<INotifyCallback> producerCallbackHandler;
 
@@ -36,15 +39,15 @@ namespace Common.Implementation
 
 		public void CreateProxy()
 		{
-			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
-			var port = ConfigurationManager.AppSettings["port"];
-			var endpoint = ConfigurationManager.AppSettings["endpoint"];
+			var ipAddress = ConfigurationManager.AppSettings["brokerIpAddress"];
+			var port = ConfigurationManager.AppSettings["brokerPort"];
+			var endpoint = ConfigurationManager.AppSettings["brokerEndpoint"];
 
-			proxy = new ProducerProxy<T>(ipAddress, port, endpoint);
-			proxy.NotifyEvent += ProxyOnNotifyEvent;
+			brokerPublishProxy = new BrokerPublishProxy<T>(ipAddress, port, endpoint);
+			brokerPublishProxy.NotifyEvent += BrokerPublishProxyOnNotifyEvent;
 		}
 
-		private void ProxyOnNotifyEvent(NotifyStatus status)
+		private void BrokerPublishProxyOnNotifyEvent(NotifyStatus status)
 		{
 			Console.WriteLine("Notify client with status " + status);
 
@@ -63,6 +66,7 @@ namespace Common.Implementation
 			try
 			{
 				asyncQueue.Enqueue(message);
+				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} successfully enqueued!");
 			}
 			catch (Exception e)
 			{
@@ -75,7 +79,7 @@ namespace Common.Implementation
 		{
 			try
 			{
-				producerCallbackHandler.GetCallback().Notify(proxy.PublishSync(message));
+				producerCallbackHandler.GetCallback().Notify(brokerPublishProxy.PublishSync(message));
 			}
 			catch (Exception e)
 			{
@@ -99,7 +103,7 @@ namespace Common.Implementation
 				}
 
 				var message = asyncQueue.Peek();
-				proxy.PublishAsync(message);
+				brokerPublishProxy.PublishAsync(message);
 				notifySemaphore.WaitOne();
 			}
 		}

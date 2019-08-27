@@ -36,7 +36,7 @@ namespace Common.Proxy
 		{
 			var factory = new DuplexChannelFactory<IPublishManager<T>>(this,
 				new NetNamedPipeBinding() { OpenTimeout = TimeSpan.MaxValue },
-				new EndpointAddress($"net.pipe://{ipAddress}:{port}/Manager/{endpoint}"));
+				new EndpointAddress($"net.pipe://{ipAddress}/Manager/{endpoint}"));
 
 			proxy = factory.CreateChannel();
 		}

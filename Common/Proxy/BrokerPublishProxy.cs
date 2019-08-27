@@ -8,7 +8,7 @@ using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ProducerProxy<T> : IProducer<T>, INotifyCallback
+	public class BrokerPublishProxy<T> : IProducer<T>, INotifyCallback
 	{
 		private readonly IProducer<T> proxy;
 
@@ -32,7 +32,7 @@ namespace Common.Proxy
 
 		#endregion
 
-		public ProducerProxy(string ipAddress, string port, string endpoint)
+		public BrokerPublishProxy(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IBroker<T>>(this,
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },

@@ -21,7 +21,7 @@ namespace ProducerApp
 			Console.WriteLine("Enter topic number (0,1,2): ");
 			var topic = (Topic) Int32.Parse(Console.ReadLine());
 
-			var t = new Thread(() => SendOne(topic));
+			var t = new Thread(() => Work(topic));
 			t.Start();
 
 			//waitSemaphore.WaitOne();
@@ -47,7 +47,7 @@ namespace ProducerApp
 				Console.WriteLine("Message {0} successfully sent", count);
 
 
-				Thread.Sleep(50);
+				Thread.Sleep(10);
 			}
 		}
 

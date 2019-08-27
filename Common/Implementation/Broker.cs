@@ -37,7 +37,9 @@ namespace Common.Implementation
 		{
 			try
 			{
-				clientCallbackHandler.GetCallback().Notify(WriteRecord(message));
+				var status = WriteRecord(message);
+				Console.WriteLine($"Message status:{status}  with data: {message.Data.ToObject<string>()}");
+				clientCallbackHandler.GetCallback().Notify(status);
 			}
 			catch (Exception e)
 			{
@@ -177,7 +179,10 @@ namespace Common.Implementation
 			var status = NotifyStatus.Failed;
 
 			var record = new Record<T>()
-			{ Topic = message.Topic, Data = message.Data, Offset = streamData.ContainsKey(message.Topic) ? streamData[message.Topic].Count : 0 };
+			{
+				Topic = message.Topic, Data = message.Data,
+				Offset = streamData.ContainsKey(message.Topic) ? streamData[message.Topic].Count : 0
+			};
 
 
 			if (streamData.ContainsKey(record.Topic))
@@ -186,14 +191,14 @@ namespace Common.Implementation
 
 				streamData[message.Topic].Add(record);
 
-				if (state == State.Hot) replicationClientProxy.SendReplica(message);
+				if (state == State.Hot) replicationClientProxy?.SendReplica(message);
 
 				status = NotifyStatus.Secceeded;
 
 				streamDataLocker.ExitWriteLock();
+
+				Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
 			}
-			
-			Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
 
 			return status;
 		}
