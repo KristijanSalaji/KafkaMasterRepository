@@ -55,21 +55,11 @@ namespace ProducerApp
 		{
 			var producer = new Producer<Topic>();
 
-			Console.WriteLine("Enter name: ");
-			var name = Console.ReadLine();
+			var dataString = "Test message";
+			producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
-			while (true)
-			{
-				count++;
+			producer.PublishSync(new Message<Topic>() {Topic = topic, Data = dataString.ToByteArray()});
 
-				var dataString = "Test message " +  count + " from " + name;
-				producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
-
-				Console.WriteLine("Message {0} successfully sent", count);
-				Console.ReadLine();
-			}
-
-			//waitSemaphore.Release(1);
 		}
 	}
 }

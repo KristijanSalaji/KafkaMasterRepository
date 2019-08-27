@@ -1,306 +1,257 @@
-﻿using System.Collections.Generic;
-using Common.Converter;
-using Common.Enums;
-using Common.Implementation;
-using Common.Model;
-using NUnit.Framework;
+﻿//using System.Collections.Generic;
+//using Common.Converter;
+//using Common.Enums;
+//using Common.Implementation;
+//using Common.Model;
+//using NUnit.Framework;
 
-namespace KafkaTest
-{
-	[TestFixture]
-	public class BrokerSyncTest
-	{
-		#region PublishSync test
+//namespace KafkaTest
+//{
+//	[TestFixture]
+//	public class BrokerSyncTest
+//	{
+//		#region PublishSync test
 
-		[Test]
-		public void PublishWhenTopicDidNotExistTest()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//		[Test]
+//		public void PublishWhenTopicDidNotExistTest()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			var testDataString = "TEST";
-			var response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsFalse(response);
-		}
+//			Assert.IsFalse(response);
+//		}
 
-		[Test]
-		public void PublishMessageWithNullValue()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//		[Test]
+//		public void PublishMessageWithNullValue()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			var response = broker.PublishSync(null);
+//			var response = broker.PublishSync(null);
 
-			Assert.IsFalse(response);
-		}
+//			Assert.IsFalse(response);
+//		}
 
-		[Test]
-		public void PublishWhenTopicExist()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//		[Test]
+//		public void PublishWhenTopicExist()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			var testDataString = "TEST";
+//			var response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(response);
 
-			response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			Assert.IsTrue(response);
-		}
+//			Assert.IsTrue(response);
+//		}
 
-		[Test]
-		public void PublishStreamSync()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//		#endregion
 
-			int count = 20;
+//		#region Request test
 
-			var stream = new List<Message<Topic>>(count);
+//		[Test]
+//		public void RequestMessageWithInvalidTopic()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			var testDataString = "TEST";
+//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<Topic>()
-				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			Assert.IsNull(message);
+//		}
 
-			var response = broker.PublishStreamSync(stream);
+//		[Test]
+//		public void RequestMessageWithInvalidOffset()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-			Assert.IsTrue(response);
+//			var testDataString = "TEST";
+//			var response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			var topicCount = broker.TopicCount(Topic.FirstT);
+//			Assert.IsTrue(response);
 
-			Assert.AreEqual(count, topicCount);
-		}
+//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
 
-		[Test]
-		public void PublishStreamWithNullValues()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//			Assert.IsNull(message);
+//		}
 
-			int count = 20;
+//		[Test]
+//		public void RequestMessageWithValidParametars()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-			var stream = new List<Message<Topic>>(count);
+//			var testDataString = "TEST";
+//			var response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(null);
-			}
+//			Assert.IsTrue(response);
 
-			var response = broker.PublishStreamSync(stream);
+//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
-			Assert.IsFalse(response);
+//			Assert.AreEqual(message.Data.ToObject<string>(), testDataString);
+//			Assert.AreEqual(message.Topic, Topic.FirstT);
+//		}
 
-			var topicCount = broker.TopicCount(Topic.FirstT);
+//		[Test]
+//		public void RequestMessageWithNullParametar()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			Assert.AreEqual(-1, topicCount);
-		}
+//			var response = broker.Request(null);
 
-		#endregion
+//			Assert.IsNull(response);
+//		}
 
-		#region Request test
 
-		[Test]
-		public void RequestMessageWithInvalidTopic()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//		[Test]
+//		public void RequestStream()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+//			int count = 20;
 
-			Assert.IsNull(message);
-		}
+//			var stream = new List<Message<Topic>>(count);
 
-		[Test]
-		public void RequestMessageWithInvalidOffset()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//			var testDataString = "TEST";
 
-			var testDataString = "TEST";
-			var response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			for (int i = 0; i < count; i++)
+//			{
+//				var message = new Message<Topic>()
+//				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() };
 
-			Assert.IsTrue(response);
+//				var response = broker.PublishSync(message);
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
+//				Assert.IsTrue(response);
+//			}
 
-			Assert.IsNull(message);
-		}
+			
+//			var topicCount = broker.TopicCount(Topic.FirstT);
 
-		[Test]
-		public void RequestMessageWithValidParametars()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//			Assert.AreEqual(count, topicCount);
 
-			var testDataString = "TEST";
-			var response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
-			Assert.IsTrue(response);
+//			Assert.AreEqual(retVal.Count, 17);
+//		}
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+//		[Test]
+//		public void RequestStreamWithNullValues()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			Assert.AreEqual(message.Data.ToObject<string>(), testDataString);
-			Assert.AreEqual(message.Topic, Topic.FirstT);
-		}
+//			var retVal = broker.RequestStream(null);
 
-		[Test]
-		public void RequestMessageWithNullParametar()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//			Assert.IsNull(retVal);
+//		}
 
-			var response = broker.Request(null);
+//		[Test]
+//		public void RequestStreamWithBadCount()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-			Assert.IsNull(response);
-		}
+//			int count = 10;
 
+//			var stream = new List<Message<Topic>>(count);
 
-		[Test]
-		public void RequestStream()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//			var testDataString = "TEST";
 
-			int count = 20;
+//			for (int i = 0; i < count; i++)
+//			{
+//				stream.Add(new Message<Topic>()
+//				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			}
 
-			var stream = new List<Message<Topic>>(count);
+//			var response = broker.PublishStreamSync(stream);
 
-			var testDataString = "TEST";
+//			Assert.IsTrue(response);
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<Topic>()
-				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			var topicCount = broker.TopicCount(Topic.FirstT);
 
-			var response = broker.PublishStreamSync(stream);
+//			Assert.AreEqual(count, topicCount);
 
-			Assert.IsTrue(response);
+//			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
-			var topicCount = broker.TopicCount(Topic.FirstT);
+//			Assert.AreEqual(retVal.Count, count);
+//		}
 
-			Assert.AreEqual(count, topicCount);
+//		#endregion
 
-			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+//		#region Topic test
 
-			Assert.AreEqual(retVal.Count, 17);
-		}
+//		[Test]
+//		public void TopicCountTest()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
+//			broker.AddTopic(Topic.FirstT);
 
-		[Test]
-		public void RequestStreamWithNullValues()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
+//			var testDataString = "TEST";
+//			var response = broker.PublishSync(new Message<Topic>()
+//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-			var retVal = broker.RequestStream(null);
+//			Assert.IsTrue(response);
+//			Assert.AreEqual(1, broker.TopicCount(Topic.FirstT));
+//			Assert.AreEqual(-1, broker.TopicCount(Topic.SecondT));
+//		}
 
-			Assert.IsNull(retVal);
-		}
+//		[Test]
+//		public void AddTopic()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-		[Test]
-		public void RequestStreamWithBadCount()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//			var result = broker.AddTopic(Topic.FirstT);
 
-			int count = 10;
+//			Assert.IsTrue(result);
+//		}
 
-			var stream = new List<Message<Topic>>(count);
+//		[Test]
+//		public void DeleteTopic()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			var testDataString = "TEST";
+//			var result = broker.AddTopic(Topic.FirstT);
 
-			for (int i = 0; i < count; i++)
-			{
-				stream.Add(new Message<Topic>()
-				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
-			}
+//			Assert.IsTrue(result);
 
-			var response = broker.PublishStreamSync(stream);
+//			result = broker.DeleteTopic(Topic.FirstT);
 
-			Assert.IsTrue(response);
+//			Assert.IsTrue(result);
+//		}
 
-			var topicCount = broker.TopicCount(Topic.FirstT);
+//		[Test]
+//		public void AddTopicWhenTopicIsAlreadyAdded()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-			Assert.AreEqual(count, topicCount);
+//			var result = broker.AddTopic(Topic.FirstT);
 
-			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+//			Assert.IsTrue(result);
 
-			Assert.AreEqual(retVal.Count, count);
-		}
+//			result = broker.AddTopic(Topic.FirstT);
 
-		#endregion
+//			Assert.IsTrue(result);
+//		}
 
-		#region Topic test
+//		[Test]
+//		public void DeleteTopicWhichDontExist()
+//		{
+//			var broker = new Broker<Topic>(State.StandBy);
 
-		[Test]
-		public void TopicCountTest()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-			broker.AddTopic(Topic.FirstT);
+//			var result = broker.DeleteTopic(Topic.FirstT);
 
-			var testDataString = "TEST";
-			var response = broker.PublishSync(new Message<Topic>()
-			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+//			Assert.IsTrue(result);
+//		}
 
-			Assert.IsTrue(response);
-			Assert.AreEqual(1, broker.TopicCount(Topic.FirstT));
-			Assert.AreEqual(-1, broker.TopicCount(Topic.SecondT));
-		}
-
-		[Test]
-		public void AddTopic()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-
-			var result = broker.AddTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-		}
-
-		[Test]
-		public void DeleteTopic()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-
-			var result = broker.AddTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-
-			result = broker.DeleteTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-		}
-
-		[Test]
-		public void AddTopicWhenTopicIsAlreadyAdded()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-
-			var result = broker.AddTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-
-			result = broker.AddTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-		}
-
-		[Test]
-		public void DeleteTopicWhichDontExist()
-		{
-			var broker = new Broker<Topic>(State.StandBy);
-
-			var result = broker.DeleteTopic(Topic.FirstT);
-
-			Assert.IsTrue(result);
-		}
-
-		#endregion
-	}
-}
+//		#endregion
+//	}
+//}

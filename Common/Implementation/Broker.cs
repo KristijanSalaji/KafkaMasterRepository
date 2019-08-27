@@ -37,62 +37,26 @@ namespace Common.Implementation
 		{
 			try
 			{
-				WriteRecord(message);
-				clientCallbackHandler.GetCallback().Notify(NotifyStatus.Secceeded);
+				clientCallbackHandler.GetCallback().Notify(WriteRecord(message));
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while publishing message: {e.Message}");
-				clientCallbackHandler.GetCallback().Notify(NotifyStatus.Failed);
+				throw;
 			}
 		}
 
-		public void PublishStreamAsync(List<Message<T>> messages)
+		public NotifyStatus PublishSync(Message<T> message)
 		{
 			try
 			{
-				foreach (var message in messages)
-				{
-					WriteRecord(message);
-				}
-				clientCallbackHandler.GetCallback().NotifyStream(NotifyStatus.Secceeded);
+				return WriteRecord(message);
+				
 			}
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while publishing message: {e.Message}");
-				clientCallbackHandler.GetCallback().NotifyStream(NotifyStatus.Failed);
-			}
-		}
-
-		public bool PublishSync(Message<T> message)
-		{
-			try
-			{
-				WriteRecord(message);
-				return true;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Error while publishing message: {e.Message}");
-				return false;
-			}
-		}
-
-		public bool PublishStreamSync(List<Message<T>> messages)
-		{
-			try
-			{
-				foreach (var message in messages)
-				{
-					WriteRecord(message);
-				}
-
-				return true;
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Error while publishing message: {e.Message}");
-				return false;
+				throw;
 			}
 		}
 
@@ -157,8 +121,13 @@ namespace Common.Implementation
 			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
 
 			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
-			replicationClientProxy.DeliverReplicaEvent += WriteRecord;
+			replicationClientProxy.DeliverReplicaEvent += ReplicaDelivered;
 			replicationClientProxy.RegisterToReplicationService();
+		}
+
+		private void ReplicaDelivered(Message<T> replication)
+		{
+			WriteRecord(replication);
 		}
 
 		public int TopicCount(T topic)
@@ -201,11 +170,11 @@ namespace Common.Implementation
 			if (message == null) throw new ArgumentNullException("message can not be null!");
 		}
 
-		private void WriteRecord(Message<T> message)
+		private NotifyStatus WriteRecord(Message<T> message)
 		{
-			//TODO WriteRecord vraca NotifyStatus da se zna da li je poruka uspesno upisana ili ne
-
 			CheckMessage(message);
+
+			var status = NotifyStatus.Failed;
 
 			var record = new Record<T>()
 			{ Topic = message.Topic, Data = message.Data, Offset = streamData.ContainsKey(message.Topic) ? streamData[message.Topic].Count : 0 };
@@ -219,16 +188,14 @@ namespace Common.Implementation
 
 				if (state == State.Hot) replicationClientProxy.SendReplica(message);
 
+				status = NotifyStatus.Secceeded;
+
 				streamDataLocker.ExitWriteLock();
 			}
-			else
-			{
-				streamDataLocker.ExitWriteLock();
-
-				throw new KeyNotFoundException("Topic doesn't exist!");
-			}
-
+			
 			Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
+
+			return status;
 		}
 
 		private Record<T> ReadRecord(SingleRequest<T> request)

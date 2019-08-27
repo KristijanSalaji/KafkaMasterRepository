@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading;
 using Common.Enums;
 using Common.Interfaces;
 using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ProducerProxy<T> : IProducer<T>, INotifyCallback
+	public class ManagerProxy<T> : IPublishManager<T>, INotifyCallback
 	{
-		private readonly IProducer<T> proxy;
+		private readonly IPublishManager<T> proxy;
 
 		#region Notify event
 
@@ -32,14 +32,16 @@ namespace Common.Proxy
 
 		#endregion
 
-		public ProducerProxy(string ipAddress, string port, string endpoint)
+		public ManagerProxy(string ipAddress, string port, string endpoint)
 		{
-			var factory = new DuplexChannelFactory<IBroker<T>>(this,
-				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },
-				new EndpointAddress($"net.tcp://{ipAddress}:{port}/Broker/{endpoint}"));
+			var factory = new DuplexChannelFactory<IPublishManager<T>>(this,
+				new NetNamedPipeBinding() { OpenTimeout = TimeSpan.MaxValue },
+				new EndpointAddress($"net.pipe://{ipAddress}:{port}/Manager/{endpoint}"));
 
 			proxy = factory.CreateChannel();
 		}
+
+		#region Notify callback
 
 		public void Notify(NotifyStatus status)
 		{
@@ -49,6 +51,10 @@ namespace Common.Proxy
 			}
 		}
 
+		#endregion
+
+		#region IPublishManager
+
 		public void PublishAsync(Message<T> message)
 		{
 			try
@@ -57,22 +63,24 @@ namespace Common.Proxy
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while publishing message: {e.Message}");
+				Console.WriteLine($"Publish async error: {e.Message}");
 				throw;
 			}
 		}
 
-		public NotifyStatus PublishSync(Message<T> message)
+		public void PublishSync(Message<T> message)
 		{
 			try
 			{
-				return proxy.PublishSync(message);
+				proxy.PublishSync(message);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while publishing message: {e.Message}");
+				Console.WriteLine($"Publish sync error: {e.Message}");
 				throw;
 			}
 		}
+
+		#endregion
 	}
 }

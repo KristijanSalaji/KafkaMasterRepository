@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{87526BEC-5BD0-4AB2-B0F3-1CA581D2E2F8}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{C12FF13E-3220-4E32-80B9-2891EB4C5371}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Common</RootNamespace>
-    <AssemblyName>Common</AssemblyName>
+    <RootNamespace>ManagerApp</RootNamespace>
+    <AssemblyName>ManagerApp</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -21,6 +22,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -30,6 +32,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,39 +47,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CallbackHandler\CallbackHandler.cs" />
-    <Compile Include="CallbackHandler\ICallbackHandler.cs" />
-    <Compile Include="Converter\BinaryConverter.cs" />
-    <Compile Include="Enums\NotifyStatus.cs" />
-    <Compile Include="Enums\State.cs" />
-    <Compile Include="Enums\SyncType.cs" />
-    <Compile Include="Enums\Topic.cs" />
-    <Compile Include="Implementation\PublishManager.cs" />
-    <Compile Include="Implementation\Broker.cs" />
-    <Compile Include="Implementation\Consumer.cs" />
-    <Compile Include="Implementation\Producer.cs" />
-    <Compile Include="Implementation\ReplicationService.cs" />
-    <Compile Include="Interfaces\IPublishManager.cs" />
-    <Compile Include="Interfaces\IBroker.cs" />
-    <Compile Include="Interfaces\IConsumer.cs" />
-    <Compile Include="Interfaces\INotifyCallback.cs" />
-    <Compile Include="Interfaces\IProducer.cs" />
-    <Compile Include="Interfaces\IReplicationClient.cs" />
-    <Compile Include="Interfaces\IReplicationClientCallback.cs" />
-    <Compile Include="Interfaces\IReplicationService.cs" />
-    <Compile Include="Interfaces\IReplicationServiceCallback.cs" />
-    <Compile Include="Model\Message.cs" />
-    <Compile Include="Model\Record.cs" />
-    <Compile Include="Model\SingleRequest.cs" />
-    <Compile Include="Model\StatusSemaphore.cs" />
-    <Compile Include="Model\StreamRequest.cs" />
+    <Compile Include="ManagerHost.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Proxy\ManagerProxy.cs" />
-    <Compile Include="Proxy\ReplicationClientProxy.cs" />
-    <Compile Include="Proxy\ReplicationServiceProxy.cs" />
-    <Compile Include="Proxy\StreamProxy.cs" />
-    <Compile Include="Proxy\ConsumerProxy.cs" />
-    <Compile Include="Proxy\ProducerProxy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{87526BEC-5BD0-4AB2-B0F3-1CA581D2E2F8}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

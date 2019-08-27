@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
-using Common.Model;
 using System.ServiceModel;
+using System.Threading;
 using Common.Enums;
+using Common.Model;
 
 namespace Common.Interfaces
 {
 	[ServiceContract]
-	public interface IProducer<T>
+	public interface IPublishManager<T>
 	{
-		[OperationContract]
-		NotifyStatus PublishSync(Message<T> message);
+		[OperationContract(IsOneWay = true)]
+		void PublishSync(Message<T> message);
 
 		[OperationContract(IsOneWay = true)]
 		void PublishAsync(Message<T> message);

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaTest", "KafkaTest\Kafk
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReplicationServiceApp", "ReplicationServiceApp\ReplicationServiceApp.csproj", "{463BB33E-A315-4488-9720-9F261872C263}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagerApp", "ManagerApp\ManagerApp.csproj", "{C12FF13E-3220-4E32-80B9-2891EB4C5371}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,12 @@ Global
 		{463BB33E-A315-4488-9720-9F261872C263}.Release|Any CPU.ActiveCfg = Release|x64
 		{463BB33E-A315-4488-9720-9F261872C263}.Release|x64.ActiveCfg = Release|x64
 		{463BB33E-A315-4488-9720-9F261872C263}.Release|x64.Build.0 = Release|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Debug|x64.ActiveCfg = Debug|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Debug|x64.Build.0 = Debug|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Release|Any CPU.ActiveCfg = Release|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Release|x64.ActiveCfg = Release|x64
+		{C12FF13E-3220-4E32-80B9-2891EB4C5371}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
