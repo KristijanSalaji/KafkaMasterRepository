@@ -43,6 +43,17 @@ namespace Common.Implementation
 			}
 		}
 
+		#region Test constructor
+
+		public ReplicationService(ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler, ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler)
+		{
+			this.clientCallbackHandler = clientCallbackHandler;
+			this.serviceCallbackHandler = serviceCallbackHandler;
+			state = State.Hot;
+		}
+
+		#endregion
+
 		private void DeliverReplica(R replication)
 		{
 			try
