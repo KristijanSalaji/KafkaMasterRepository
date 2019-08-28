@@ -19,8 +19,8 @@ namespace ManagerApp
 		{
 			try
 			{
-				host = new ServiceHost(manager, new Uri($"net.pipe://{address}"));
-				host.AddServiceEndpoint(typeof(IPublishManager<T>), new NetNamedPipeBinding(), $"Manager/{endpoint}");
+				host = new ServiceHost(manager, new Uri($"net.pipe://{address}/Manager/{endpoint}"));
+				host.AddServiceEndpoint(typeof(IPublishManager<T>), new NetNamedPipeBinding(), "");
 				info = $"net.tcp://{address}/Manager/{endpoint}";
 
 				return true;

@@ -21,8 +21,17 @@ namespace ProducerApp
 			Console.WriteLine("Enter topic number (0,1,2): ");
 			var topic = (Topic) Int32.Parse(Console.ReadLine());
 
-			var t = new Thread(() => Work(topic));
-			t.Start();
+			Console.WriteLine("enter 0 for async or 1 for sync communication: ");
+			if (Int32.Parse(Console.ReadLine()) == 0)
+			{
+				var t = new Thread(() => WorkAsync(topic));
+				t.Start();
+			}
+			else
+			{
+				var t = new Thread(() => WorkSync(topic));
+				t.Start();
+			}
 
 			//waitSemaphore.WaitOne();
 			Console.WriteLine("Press any key to finish... ");
@@ -34,7 +43,7 @@ namespace ProducerApp
 			Console.ReadLine();
 		}
 
-		private static void Work(Topic topic)
+		private static void WorkAsync(Topic topic)
 		{
 			var producer = new Producer<Topic>();
 
@@ -45,6 +54,23 @@ namespace ProducerApp
 
 				count++;
 				Console.WriteLine("Message {0} successfully sent", count);
+
+
+				//Thread.Sleep(10);
+			}
+		}
+
+		private static void WorkSync(Topic topic)
+		{
+			var producer = new Producer<Topic>();
+
+			while (decision)
+			{
+				var dataString = "Test message " + count;
+				var state = producer.PublishSync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
+
+				count++;
+				Console.WriteLine("Message {0} sent with state {1}", count, state);
 
 
 				Thread.Sleep(10);

@@ -80,7 +80,9 @@ namespace Common.Implementation
 		{
 			try
 			{
-				producerCallbackHandler.GetCallback().Notify(brokerPublishProxy.PublishSync(message));
+				var status = brokerPublishProxy.PublishSync(message);
+				producerCallbackHandler.GetCallback().Notify(status);
+				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {status}");
 			}
 			catch (Exception e)
 			{
