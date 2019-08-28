@@ -1,257 +1,255 @@
-﻿//using System.Collections.Generic;
-//using Common.Converter;
-//using Common.Enums;
-//using Common.Implementation;
-//using Common.Model;
-//using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Common.Converter;
+using Common.Enums;
+using Common.Implementation;
+using Common.Model;
+using NUnit.Framework;
 
-//namespace KafkaTest
-//{
-//	[TestFixture]
-//	public class BrokerSyncTest
-//	{
-//		#region PublishSync test
+namespace KafkaTest
+{
+	[TestFixture]
+	public class BrokerSyncTest
+	{
+		#region PublishSync test
 
-//		[Test]
-//		public void PublishWhenTopicDidNotExistTest()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void PublishWhenTopicDidNotExistTest()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var testDataString = "TEST";
-//			var response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			var testDataString = "TEST";
+			var response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			Assert.IsFalse(response);
-//		}
+			Assert.AreEqual(response, NotifyStatus.Failed);
+		}
 
-//		[Test]
-//		public void PublishMessageWithNullValue()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void PublishMessageWithNullValue()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var response = broker.PublishSync(null);
+			Assert.Catch<ArgumentNullException>(() =>broker.PublishSync(null));
+		}
 
-//			Assert.IsFalse(response);
-//		}
+		[Test]
+		public void PublishWhenTopicExist()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
-//		[Test]
-//		public void PublishWhenTopicExist()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+			var testDataString = "TEST";
+			var response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			var testDataString = "TEST";
-//			var response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-//			Assert.IsTrue(response);
+			response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			Assert.AreEqual(response, NotifyStatus.Secceeded);
+		}
 
-//			Assert.IsTrue(response);
-//		}
+		#endregion
 
-//		#endregion
+		#region Request test
 
-//		#region Request test
+		[Test]
+		public void RequestMessageWithInvalidTopic()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//		[Test]
-//		public void RequestMessageWithInvalidTopic()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
-//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+			Assert.IsNull(message);
+		}
 
-//			Assert.IsNull(message);
-//		}
+		[Test]
+		public void RequestMessageWithInvalidOffset()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
-//		[Test]
-//		public void RequestMessageWithInvalidOffset()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+			var testDataString = "TEST";
+			var response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			var testDataString = "TEST";
-//			var response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-//			Assert.IsTrue(response);
+			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
 
-//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
+			Assert.IsNull(message);
+		}
 
-//			Assert.IsNull(message);
-//		}
+		[Test]
+		public void RequestMessageWithValidParametars()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
-//		[Test]
-//		public void RequestMessageWithValidParametars()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+			var testDataString = "TEST";
+			var response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			var testDataString = "TEST";
-//			var response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-//			Assert.IsTrue(response);
+			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
-//			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+			Assert.AreEqual(message.Data.ToObject<string>(), testDataString);
+			Assert.AreEqual(message.Topic, Topic.FirstT);
+		}
 
-//			Assert.AreEqual(message.Data.ToObject<string>(), testDataString);
-//			Assert.AreEqual(message.Topic, Topic.FirstT);
-//		}
+		[Test]
+		public void RequestMessageWithNullParametar()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//		[Test]
-//		public void RequestMessageWithNullParametar()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+			Assert.Catch<ArgumentNullException>(() => broker.PublishSync(null));
+		}
 
-//			var response = broker.Request(null);
 
-//			Assert.IsNull(response);
-//		}
+		[Test]
+		public void RequestStream()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
+			int count = 20;
 
-//		[Test]
-//		public void RequestStream()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+			var stream = new List<Message<Topic>>(count);
 
-//			int count = 20;
+			var testDataString = "TEST";
 
-//			var stream = new List<Message<Topic>>(count);
+			for (int i = 0; i < count; i++)
+			{
+				var message = new Message<Topic>()
+				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() };
 
-//			var testDataString = "TEST";
+				var response = broker.PublishSync(message);
 
-//			for (int i = 0; i < count; i++)
-//			{
-//				var message = new Message<Topic>()
-//				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() };
+				Assert.AreEqual(response, NotifyStatus.Secceeded);
+			}
 
-//				var response = broker.PublishSync(message);
 
-//				Assert.IsTrue(response);
-//			}
+			var topicCount = broker.TopicCount(Topic.FirstT);
 
-			
-//			var topicCount = broker.TopicCount(Topic.FirstT);
+			Assert.AreEqual(count, topicCount);
 
-//			Assert.AreEqual(count, topicCount);
+			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
-//			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+			Assert.AreEqual(retVal.Count, 17);
+		}
 
-//			Assert.AreEqual(retVal.Count, 17);
-//		}
+		[Test]
+		public void RequestStreamWithNullValues()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//		[Test]
-//		public void RequestStreamWithNullValues()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+			var retVal = broker.RequestStream(null);
 
-//			var retVal = broker.RequestStream(null);
+			Assert.IsNull(retVal);
+		}
 
-//			Assert.IsNull(retVal);
-//		}
+		[Test]
+		public void RequestStreamWithBadCount()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
-//		[Test]
-//		public void RequestStreamWithBadCount()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+			int count = 10;
 
-//			int count = 10;
+			var stream = new List<Message<Topic>>(count);
 
-//			var stream = new List<Message<Topic>>(count);
+			var testDataString = "TEST";
 
-//			var testDataString = "TEST";
+			for (int i = 0; i < count; i++)
+			{
+				var message = new Message<Topic>()
+				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() };
 
-//			for (int i = 0; i < count; i++)
-//			{
-//				stream.Add(new Message<Topic>()
-//				{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
-//			}
+				var response = broker.PublishSync(message);
 
-//			var response = broker.PublishStreamSync(stream);
+				Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-//			Assert.IsTrue(response);
+			}
 
-//			var topicCount = broker.TopicCount(Topic.FirstT);
+			var topicCount = broker.TopicCount(Topic.FirstT);
 
-//			Assert.AreEqual(count, topicCount);
+			Assert.AreEqual(count, topicCount);
 
-//			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
-//			Assert.AreEqual(retVal.Count, count);
-//		}
+			Assert.AreEqual(retVal.Count, count);
+		}
 
-//		#endregion
+		#endregion
 
-//		#region Topic test
+		#region Topic test
 
-//		[Test]
-//		public void TopicCountTest()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
-//			broker.AddTopic(Topic.FirstT);
+		[Test]
+		public void TopicCountTest()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
+			broker.AddTopic(Topic.FirstT);
 
-//			var testDataString = "TEST";
-//			var response = broker.PublishSync(new Message<Topic>()
-//			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
+			var testDataString = "TEST";
+			var response = broker.PublishSync(new Message<Topic>()
+			{ Topic = Topic.FirstT, Data = testDataString.ToByteArray() });
 
-//			Assert.IsTrue(response);
-//			Assert.AreEqual(1, broker.TopicCount(Topic.FirstT));
-//			Assert.AreEqual(-1, broker.TopicCount(Topic.SecondT));
-//		}
+			Assert.AreEqual(response, NotifyStatus.Secceeded);
+			Assert.AreEqual(1, broker.TopicCount(Topic.FirstT));
+			Assert.AreEqual(-1, broker.TopicCount(Topic.SecondT));
+		}
 
-//		[Test]
-//		public void AddTopic()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void AddTopic()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var result = broker.AddTopic(Topic.FirstT);
+			var result = broker.AddTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
-//		}
+			Assert.IsTrue(result);
+		}
 
-//		[Test]
-//		public void DeleteTopic()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void DeleteTopic()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var result = broker.AddTopic(Topic.FirstT);
+			var result = broker.AddTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
+			Assert.IsTrue(result);
 
-//			result = broker.DeleteTopic(Topic.FirstT);
+			result = broker.DeleteTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
-//		}
+			Assert.IsTrue(result);
+		}
 
-//		[Test]
-//		public void AddTopicWhenTopicIsAlreadyAdded()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void AddTopicWhenTopicIsAlreadyAdded()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var result = broker.AddTopic(Topic.FirstT);
+			var result = broker.AddTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
+			Assert.IsTrue(result);
 
-//			result = broker.AddTopic(Topic.FirstT);
+			result = broker.AddTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
-//		}
+			Assert.IsTrue(result);
+		}
 
-//		[Test]
-//		public void DeleteTopicWhichDontExist()
-//		{
-//			var broker = new Broker<Topic>(State.StandBy);
+		[Test]
+		public void DeleteTopicWhichDontExist()
+		{
+			var broker = new Broker<Topic>(State.StandBy);
 
-//			var result = broker.DeleteTopic(Topic.FirstT);
+			var result = broker.DeleteTopic(Topic.FirstT);
 
-//			Assert.IsTrue(result);
-//		}
+			Assert.IsTrue(result);
+		}
 
-//		#endregion
-//	}
-//}
+		#endregion
+	}
+}

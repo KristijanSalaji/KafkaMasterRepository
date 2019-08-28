@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\MasterKafkaRepo\Kafka\x64\KafkaTest.dll" total="15" errors="2" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2019-08-28" time="12:10:24">
+  <environment nunit-version="2.6.2.12296" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="D:\MasterKafkaRepo\Kafka\OpenCover\172ae6cc-0d32-4842-ba45-3a99ba191409" machine-name="W10ENT" user="admin" user-domain="W10ENT" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\MasterKafkaRepo\Kafka\x64\KafkaTest.dll" executed="True" result="Failure" success="False" time="0.724" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="KafkaTest" executed="True" result="Failure" success="False" time="0.662" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="BrokerSyncTest" executed="True" result="Failure" success="False" time="0.660" asserts="0">
+            <results>
+              <test-case name="KafkaTest.BrokerSyncTest.AddTopic" executed="True" result="Success" success="True" time="0.255" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.AddTopicWhenTopicIsAlreadyAdded" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.DeleteTopic" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.DeleteTopicWhichDontExist" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.PublishMessageWithNullValue" executed="True" result="Error" success="False" time="0.070" asserts="0">
+                <failure>
+                  <message><![CDATA[System.ArgumentNullException : Value cannot be null.
+Parameter name: message can not be null!]]></message>
+                  <stack-trace><![CDATA[at Common.Implementation.Broker`1.CheckMessage(Message`1 message) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 173
+at Common.Implementation.Broker`1.WriteRecord(Message`1 message) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 178
+at Common.Implementation.Broker`1.PublishSync(Message`1 message) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 63
+at KafkaTest.BrokerSyncTest.PublishMessageWithNullValue() in D:\MasterKafkaRepo\Kafka\KafkaTest\BrokerSyncTest.cs:line 32
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="KafkaTest.BrokerSyncTest.PublishWhenTopicDidNotExistTest" executed="True" result="Failure" success="False" time="0.150" asserts="0">
+                <failure>
+                  <message><![CDATA[  Expected: Failed
+  But was:  Secceeded
+]]></message>
+                  <stack-trace><![CDATA[at KafkaTest.BrokerSyncTest.PublishWhenTopicDidNotExistTest() in D:\MasterKafkaRepo\Kafka\KafkaTest\BrokerSyncTest.cs:line 24
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="KafkaTest.BrokerSyncTest.PublishWhenTopicExist" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithInvalidOffset" executed="True" result="Success" success="True" time="0.008" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithInvalidTopic" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithNullParametar" executed="True" result="Error" success="False" time="0.001" asserts="0">
+                <failure>
+                  <message><![CDATA[System.ArgumentNullException : Value cannot be null.
+Parameter name: Request can not be null!]]></message>
+                  <stack-trace><![CDATA[at Common.Implementation.Broker`1.CheckRequest(SingleRequest`1 request) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 168
+at Common.Implementation.Broker`1.ReadRecord(SingleRequest`1 request) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 209
+at Common.Implementation.Broker`1.Request(SingleRequest`1 request) in D:\MasterKafkaRepo\Kafka\Common\Implementation\Broker.cs:line 83
+at KafkaTest.BrokerSyncTest.RequestMessageWithNullParametar() in D:\MasterKafkaRepo\Kafka\KafkaTest\BrokerSyncTest.cs:line 109
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithValidParametars" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStream" executed="True" result="Success" success="True" time="0.019" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStreamWithBadCount" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStreamWithNullValues" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.TopicCountTest" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
