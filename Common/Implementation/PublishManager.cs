@@ -105,9 +105,17 @@ namespace Common.Implementation
 					continue;
 				}
 
-				var message = asyncQueue.Peek();
-				brokerPublishProxy.PublishAsync(message);
-				notifySemaphore.WaitOne();
+				try
+				{
+					var message = asyncQueue.Peek();
+					brokerPublishProxy.PublishAsync(message);
+					notifySemaphore.WaitOne();
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine($"Error while sending async message from queue: {e.Message}");
+					throw;
+				}
 			}
 		}
 

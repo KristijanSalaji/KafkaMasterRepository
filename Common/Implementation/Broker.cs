@@ -212,7 +212,7 @@ namespace Common.Implementation
 
 			streamDataLocker.EnterReadLock();
 
-			if (streamData.ContainsKey(request.Topic) && streamData[request.Topic].Count >= request.Offset)
+			if (streamData.ContainsKey(request.Topic) && streamData[request.Topic].Count > request.Offset)
 			{
 				record = streamData[request.Topic][request.Offset];
 			}

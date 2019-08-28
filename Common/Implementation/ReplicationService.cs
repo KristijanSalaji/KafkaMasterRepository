@@ -45,7 +45,15 @@ namespace Common.Implementation
 
 		private void DeliverReplica(R replication)
 		{
-			if (clientCallback != null) clientCallback.DeliverReplica(replication);
+			try
+			{
+				clientCallback?.DeliverReplica(replication);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Deliver replica to client error: {e.Message}");
+				throw;
+			}
 		}
 
 		#region IReplicationService implementation
@@ -54,13 +62,30 @@ namespace Common.Implementation
 
 		public byte[] ForwardIntegrityUpdate()
 		{
-			return clientCallback.GetIntegrityUpdate();
+			try
+			{
+				return clientCallback?.GetIntegrityUpdate();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Forward integrity update error: {e.Message}");
+				throw;
+			}
 		}
 
 		public bool RegisterToPartner()
 		{
-			partnerCallback = serviceCallbackHandler.GetCallback();
-			return true;
+			try
+			{
+				partnerCallback = serviceCallbackHandler.GetCallback();
+				Console.WriteLine("Partner is successfully registered!");
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Register to partner error: {e.Message}");
+				throw;
+			}
 		}
 
 		#endregion
@@ -71,7 +96,17 @@ namespace Common.Implementation
 
 		public bool ForwardReplica(R replication)
 		{
-			return clientCallback.DeliverReplica(replication);
+			if (clientCallback == null) return false;
+
+			try
+			{
+				return clientCallback.DeliverReplica(replication);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Forward replica error: {e.Message}");
+				throw;
+			}
 		}
 
 		#endregion
@@ -83,21 +118,46 @@ namespace Common.Implementation
 		// hot strana poziva
 		public bool RegisterToReplicationService()
 		{
-			clientCallback = clientCallbackHandler.GetCallback();
-			return true;
+			try
+			{
+				clientCallback = clientCallbackHandler.GetCallback();
+				Console.WriteLine("Broker is successfully registered!");
+				return true;
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Register to replication service error {e.Message}");
+				throw;
+			}
 		}
 
 		public bool SendReplica(R replication)
 		{
 			if (partnerCallback == null) return false;
-			
-			return partnerCallback.ForwardReplica(replication);
+
+			try
+			{
+				return partnerCallback.ForwardReplica(replication);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Error while sending replica: {e.Message}");
+				throw;
+			}
 		}
 
 		//standby strana poziva
 		public byte[] RequestIntegrityUpdate()
 		{
-			return partnerServiceProxy.ForwardIntegrityUpdate();
+			try
+			{
+				return partnerServiceProxy?.ForwardIntegrityUpdate();
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine($"Request integrity update error: {e.Message}");
+				throw;
+			}
 		}
 
 		#endregion
