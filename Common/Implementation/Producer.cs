@@ -19,13 +19,13 @@ namespace Common.Implementation
 		public Producer()
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
-			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
 			syncSemaphore = new StatusSemaphore(0,1);
 
-			managerProxy = new ManagerProxy<T>(ipAddress, port, endpoint);
+			managerProxy = new ManagerProxy<T>();
 			managerProxy.NotifyEvent += ManagerProxyOnNotifyEvent;
+			managerProxy.Initialize(ipAddress, endpoint);
 		}
 
 		private void ManagerProxyOnNotifyEvent(NotifyStatus status)

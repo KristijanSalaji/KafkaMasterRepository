@@ -7,7 +7,7 @@ namespace Common.Proxy
 {
 	public class ReplicationServiceProxy<R> : IReplicationService, IReplicationServiceCallback<R>
 	{
-		private readonly IReplicationService proxy;
+		private IReplicationService proxy;
 
 		#region Forward replica event
 
@@ -29,7 +29,12 @@ namespace Common.Proxy
 
 		#endregion
 
-		public ReplicationServiceProxy(string ipAddress, string port, string endpoint)
+		public ReplicationServiceProxy()
+		{
+				
+		}
+
+		public void Initialize(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IReplicationService>(this,
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },

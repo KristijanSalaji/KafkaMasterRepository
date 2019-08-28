@@ -9,7 +9,7 @@ namespace Common.Implementation
 {
 	public class Consumer<T> : IConsumer<T>
 	{
-		private readonly ConsumerProxy<T> proxy;
+		private readonly BrokerRequestProxy<T> brokerRequestProxy;
 
 		public Consumer()
 		{
@@ -17,14 +17,15 @@ namespace Common.Implementation
 			var port = ConfigurationManager.AppSettings["port"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
-			proxy = new ConsumerProxy<T>(ipAddress, port, endpoint);
+			brokerRequestProxy = new BrokerRequestProxy<T>();
+			brokerRequestProxy.Initialize(ipAddress, port, endpoint);
 		}
 
 		public Message<T> Request(SingleRequest<T> request)
 		{
 			try
 			{
-				return proxy.Request(request);
+				return brokerRequestProxy.Request(request);
 			}
 			catch (Exception e)
 			{
@@ -37,7 +38,7 @@ namespace Common.Implementation
 		{
 			try
 			{
-				return proxy.RequestStream(request);
+				return brokerRequestProxy.RequestStream(request);
 			}
 			catch (Exception e)
 			{

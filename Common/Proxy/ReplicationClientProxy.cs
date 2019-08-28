@@ -30,7 +30,12 @@ namespace Common.Proxy
 
 		#endregion
 
-		public ReplicationClientProxy(string ipAddress, string port, string endpoint)
+		public ReplicationClientProxy()
+		{
+				
+		}
+
+		public void Initialize(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IReplicationClient<R>>(this,
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },

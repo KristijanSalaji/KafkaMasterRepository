@@ -122,8 +122,9 @@ namespace Common.Implementation
 			var port = ConfigurationManager.AppSettings["replicationServicePort"];
 			var endpoint = ConfigurationManager.AppSettings["replicationServiceEndpoint"];
 
-			replicationClientProxy = new ReplicationClientProxy<Message<T>>(ipAddress, port, endpoint);
+			replicationClientProxy = new ReplicationClientProxy<Message<T>>();
 			replicationClientProxy.DeliverReplicaEvent += ReplicaDelivered;
+			replicationClientProxy.Initialize(ipAddress, port, endpoint);
 			replicationClientProxy.RegisterToReplicationService();
 		}
 

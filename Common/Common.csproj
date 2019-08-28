@@ -74,8 +74,7 @@
     <Compile Include="Proxy\ManagerProxy.cs" />
     <Compile Include="Proxy\ReplicationClientProxy.cs" />
     <Compile Include="Proxy\ReplicationServiceProxy.cs" />
-    <Compile Include="Proxy\StreamProxy.cs" />
-    <Compile Include="Proxy\ConsumerProxy.cs" />
+    <Compile Include="Proxy\BrokerRequestProxy.cs" />
     <Compile Include="Proxy\BrokerPublishProxy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

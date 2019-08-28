@@ -10,7 +10,7 @@ namespace Common.Proxy
 {
 	public class ManagerProxy<T> : IPublishManager<T>, INotifyCallback
 	{
-		private readonly IPublishManager<T> proxy;
+		private IPublishManager<T> proxy;
 
 		#region Notify event
 
@@ -32,7 +32,12 @@ namespace Common.Proxy
 
 		#endregion
 
-		public ManagerProxy(string ipAddress, string port, string endpoint)
+		public ManagerProxy()
+		{
+				
+		}
+
+		public void Initialize(string ipAddress, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IPublishManager<T>>(this,
 				new NetNamedPipeBinding() { OpenTimeout = TimeSpan.MaxValue },

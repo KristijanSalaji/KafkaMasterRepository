@@ -32,9 +32,14 @@ namespace Common.Implementation
 
 			if (this.state == State.StandBy)
 			{
-				partnerServiceProxy = new ReplicationServiceProxy<R>(ConfigurationManager.AppSettings["partnerIpAddress"], ConfigurationManager.AppSettings["partnerPort"], "replication");
-				partnerServiceProxy.RegisterToPartner();
+				var partnerIpAddress = ConfigurationManager.AppSettings["partnerIpAddress"];
+				var partnerPort = ConfigurationManager.AppSettings["partnerPort"];
+				var partnerEndpoint = ConfigurationManager.AppSettings["endpoint"];
+
+				partnerServiceProxy = new ReplicationServiceProxy<R>();
 				partnerServiceProxy.ForwardReplicaEvent += DeliverReplica;
+				partnerServiceProxy.Initialize(partnerIpAddress, partnerPort, partnerEndpoint);
+				partnerServiceProxy.RegisterToPartner();
 			}
 		}
 

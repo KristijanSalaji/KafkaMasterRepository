@@ -6,11 +6,16 @@ using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ConsumerProxy<T> : IConsumer<T>
+	public class BrokerRequestProxy<T> : IConsumer<T>
 	{
-		private readonly IConsumer<T> proxy;
+		private IConsumer<T> proxy;
 
-		public ConsumerProxy(string ipAddress, string port, string endpoint)
+		public BrokerRequestProxy()
+		{
+				
+		}
+
+		public void Initialize(string ipAddress, string port, string endpoint)
 		{
 			var factory = new ChannelFactory<IBroker<T>>(
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },

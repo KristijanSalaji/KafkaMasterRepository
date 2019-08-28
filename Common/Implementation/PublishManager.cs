@@ -43,8 +43,9 @@ namespace Common.Implementation
 			var port = ConfigurationManager.AppSettings["brokerPort"];
 			var endpoint = ConfigurationManager.AppSettings["brokerEndpoint"];
 
-			brokerPublishProxy = new BrokerPublishProxy<T>(ipAddress, port, endpoint);
+			brokerPublishProxy = new BrokerPublishProxy<T>();
 			brokerPublishProxy.NotifyEvent += BrokerPublishProxyOnNotifyEvent;
+			brokerPublishProxy.Initialize(ipAddress, port, endpoint);
 		}
 
 		private void BrokerPublishProxyOnNotifyEvent(NotifyStatus status)

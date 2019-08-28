@@ -10,7 +10,7 @@ namespace Common.Proxy
 {
 	public class BrokerPublishProxy<T> : IProducer<T>, INotifyCallback
 	{
-		private readonly IProducer<T> proxy;
+		private IProducer<T> proxy;
 
 		#region Notify event
 
@@ -32,7 +32,12 @@ namespace Common.Proxy
 
 		#endregion
 
-		public BrokerPublishProxy(string ipAddress, string port, string endpoint)
+		public BrokerPublishProxy()
+		{
+				
+		}
+
+		public void Initialize(string ipAddress, string port, string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IBroker<T>>(this,
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },
