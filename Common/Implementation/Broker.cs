@@ -78,7 +78,7 @@ namespace Common.Implementation
 			catch (Exception e)
 			{
 				Console.WriteLine($"Error while processing request: {e.Message}");
-				return null;
+				throw;
 			}
 		}
 

@@ -46,7 +46,7 @@ namespace ConsumerApp
 					offset++;
 				}
 
-				Thread.Sleep(80);
+				Thread.Sleep(10);
 			}
 		}
 	}

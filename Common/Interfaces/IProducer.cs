@@ -5,7 +5,7 @@ using Common.Enums;
 
 namespace Common.Interfaces
 {
-	[ServiceContract]
+	[ServiceContract(CallbackContract = typeof(INotifyCallback))]
 	public interface IProducer<T>
 	{
 		[OperationContract]

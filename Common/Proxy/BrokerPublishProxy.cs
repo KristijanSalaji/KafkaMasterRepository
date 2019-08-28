@@ -39,7 +39,7 @@ namespace Common.Proxy
 
 		public void Initialize(string ipAddress, string port, string endpoint)
 		{
-			var factory = new DuplexChannelFactory<IBroker<T>>(this,
+			var factory = new DuplexChannelFactory<IProducer<T>>(this,
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },
 				new EndpointAddress($"net.tcp://{ipAddress}:{port}/Broker/{endpoint}"));
 
