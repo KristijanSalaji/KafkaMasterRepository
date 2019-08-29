@@ -157,8 +157,7 @@ namespace Common.Implementation
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Error while sending replica: {e.Message}");
-				throw;
+				return false;
 			}
 		}
 

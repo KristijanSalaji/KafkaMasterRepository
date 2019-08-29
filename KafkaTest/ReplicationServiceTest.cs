@@ -203,7 +203,7 @@ namespace KafkaTest
 		[Test]
 		public void SendReplicaToPartnerWhenCallbackIsNull()
 		{
-			Assert.Catch<Exception>(() => replicationService.SendReplica(testMessage));
+			Assert.IsFalse(replicationService.SendReplica(testMessage));
 		}
 
 		[Test]
