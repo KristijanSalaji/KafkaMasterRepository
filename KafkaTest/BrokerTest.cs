@@ -68,14 +68,14 @@ namespace KafkaTest
 
 		#endregion
 
-		#region Request test
+		#region SingleRequest test
 
 		[Test]
 		public void RequestMessageWithInvalidTopic()
 		{
 			var broker = new Broker<Topic>(State.StandBy);
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+			var message = broker.SingleRequest(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
 			Assert.IsNull(message);
 		}
@@ -92,7 +92,7 @@ namespace KafkaTest
 
 			Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
+			var message = broker.SingleRequest(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 4 });
 
 			Assert.IsNull(message);
 		}
@@ -109,7 +109,7 @@ namespace KafkaTest
 
 			Assert.AreEqual(response, NotifyStatus.Secceeded);
 
-			var message = broker.Request(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
+			var message = broker.SingleRequest(new SingleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0 });
 
 			Assert.AreEqual(message.Data.ToObject<string>(), testDataString);
 			Assert.AreEqual(message.Topic, Topic.FirstT);
@@ -151,7 +151,7 @@ namespace KafkaTest
 
 			Assert.AreEqual(count, topicCount);
 
-			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+			var retVal = broker.MultipleRequest(new MultipleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
 			Assert.AreEqual(retVal.Count, 17);
 		}
@@ -161,7 +161,7 @@ namespace KafkaTest
 		{
 			var broker = new Broker<Topic>(State.StandBy);
 
-			var retVal = broker.RequestStream(null);
+			var retVal = broker.MultipleRequest(null);
 
 			Assert.IsNull(retVal);
 		}
@@ -193,7 +193,7 @@ namespace KafkaTest
 
 			Assert.AreEqual(count, topicCount);
 
-			var retVal = broker.RequestStream(new StreamRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
+			var retVal = broker.MultipleRequest(new MultipleRequest<Topic>() { Topic = Topic.FirstT, Offset = 0, Count = 17 });
 
 			Assert.AreEqual(retVal.Count, count);
 		}

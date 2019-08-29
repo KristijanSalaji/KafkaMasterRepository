@@ -24,28 +24,28 @@ namespace Common.Proxy
 			proxy = factory.CreateChannel();
 		}
 
-		public Message<T> Request(SingleRequest<T> request)
+		public Message<T> SingleRequest(SingleRequest<T> request)
 		{
 			try
 			{
-				return proxy.Request(request);
+				return proxy.SingleRequest(request);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while processing request: {e.Message}");
+				Console.WriteLine($"Exception while processing request: {e.Message}");
 				return null;
 			}
 		}
 
-		public List<Message<T>> RequestStream(StreamRequest<T> request)
+		public List<Message<T>> MultipleRequest(MultipleRequest<T> request)
 		{
 			try
 			{
-				return proxy.RequestStream(request);
+				return proxy.MultipleRequest(request);
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while processing stream request: {e.Message}");
+				Console.WriteLine($"Exception while processing stream request: {e.Message}");
 				return null;
 			}
 		}

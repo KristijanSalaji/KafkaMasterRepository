@@ -13,9 +13,9 @@ namespace Common.Interfaces
 	public interface IConsumer<T>
 	{
 		[OperationContract]
-		Message<T> Request(SingleRequest<T> request);
+		Message<T> SingleRequest(SingleRequest<T> request);
 
 		[OperationContract]
-		List<Message<T>> RequestStream(StreamRequest<T> request);
+		List<Message<T>> MultipleRequest(MultipleRequest<T> request);
 	}
 }

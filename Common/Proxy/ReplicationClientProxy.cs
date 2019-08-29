@@ -67,7 +67,7 @@ namespace Common.Proxy
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Request integrity update error: {e.Message}");
+				Console.WriteLine($"SingleRequest integrity update error: {e.Message}");
 				throw;
 			}
 		}

@@ -11,8 +11,6 @@ namespace Common.Implementation
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class ReplicationService<R> : IReplicationService, IReplicationServiceCallback<R>, IReplicationClient<R>
 	{
-		//public State State { get; set; }
-
 		private State state;
 
 		private IReplicationClientCallback<R> clientCallback; //broker
@@ -170,7 +168,7 @@ namespace Common.Implementation
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Request integrity update error: {e.Message}");
+				Console.WriteLine($"SingleRequest integrity update error: {e.Message}");
 				throw;
 			}
 		}

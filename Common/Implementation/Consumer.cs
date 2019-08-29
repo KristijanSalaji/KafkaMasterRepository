@@ -21,11 +21,11 @@ namespace Common.Implementation
 			brokerRequestProxy.Initialize(ipAddress, port, endpoint);
 		}
 
-		public Message<T> Request(SingleRequest<T> request)
+		public Message<T> SingleRequest(SingleRequest<T> request)
 		{
 			try
 			{
-				return brokerRequestProxy.Request(request);
+				return brokerRequestProxy.SingleRequest(request);
 			}
 			catch (Exception e)
 			{
@@ -34,11 +34,11 @@ namespace Common.Implementation
 			}
 		}
 
-		public List<Message<T>> RequestStream(StreamRequest<T> request)
+		public List<Message<T>> MultipleRequest(MultipleRequest<T> request)
 		{
 			try
 			{
-				return brokerRequestProxy.RequestStream(request);
+				return brokerRequestProxy.MultipleRequest(request);
 			}
 			catch (Exception e)
 			{

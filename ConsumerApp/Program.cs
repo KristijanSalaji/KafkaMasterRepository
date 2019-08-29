@@ -38,7 +38,7 @@ namespace ConsumerApp
 			{
 				var request = new SingleRequest<Topic>() {Topic = topic, Offset = offset};
 
-				var message = consumer.Request(request);
+				var message = consumer.SingleRequest(request);
 
 				if (message != null)
 				{

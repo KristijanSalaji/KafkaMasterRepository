@@ -75,7 +75,7 @@ namespace Common.Implementation
 			}
 		}
 
-		public Message<T> Request(SingleRequest<T> request)
+		public Message<T> SingleRequest(SingleRequest<T> request)
 		{
 			try
 			{
@@ -95,7 +95,7 @@ namespace Common.Implementation
 			}
 		}
 
-		public List<Message<T>> RequestStream(StreamRequest<T> request)
+		public List<Message<T>> MultipleRequest(MultipleRequest<T> request)
 		{
 			try
 			{
@@ -178,7 +178,7 @@ namespace Common.Implementation
 
 		private void CheckRequest(SingleRequest<T> request)
 		{
-			if (request == null) throw new ArgumentNullException("Request can not be null!");
+			if (request == null) throw new ArgumentNullException("SingleRequest can not be null!");
 		}
 
 		private void CheckMessage(Message<T> message)

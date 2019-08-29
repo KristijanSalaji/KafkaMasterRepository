@@ -69,7 +69,7 @@
     <Compile Include="Model\Record.cs" />
     <Compile Include="Model\SingleRequest.cs" />
     <Compile Include="Model\StatusSemaphore.cs" />
-    <Compile Include="Model\StreamRequest.cs" />
+    <Compile Include="Model\MultipleRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy\ManagerProxy.cs" />
     <Compile Include="Proxy\ReplicationClientProxy.cs" />
