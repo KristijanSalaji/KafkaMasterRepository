@@ -45,20 +45,23 @@ namespace Common.Implementation
 
 		#region Test constructor
 
-		public ReplicationService(ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler, ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler)
+		public ReplicationService(ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler, ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler, ReplicationServiceProxy<R> proxy)
 		{
 			this.clientCallbackHandler = clientCallbackHandler;
 			this.serviceCallbackHandler = serviceCallbackHandler;
+			this.partnerServiceProxy = proxy;
 			state = State.Hot;
 		}
 
 		#endregion
 
-		private void DeliverReplica(R replication)
+		#region Forward replica event method
+
+		public void DeliverReplica(R replication)
 		{
 			try
 			{
-				clientCallback?.DeliverReplica(replication);
+				clientCallback.DeliverReplica(replication);
 			}
 			catch (Exception e)
 			{
@@ -66,6 +69,8 @@ namespace Common.Implementation
 				throw;
 			}
 		}
+
+		#endregion
 
 		#region IReplicationService implementation
 
@@ -75,7 +80,7 @@ namespace Common.Implementation
 		{
 			try
 			{
-				return clientCallback?.GetIntegrityUpdate();
+				return clientCallback.GetIntegrityUpdate();
 			}
 			catch (Exception e)
 			{
@@ -107,7 +112,7 @@ namespace Common.Implementation
 
 		public bool ForwardReplica(R replication)
 		{
-			if (clientCallback == null) return false;
+			if (replication == null) return false;
 
 			try
 			{
@@ -144,7 +149,7 @@ namespace Common.Implementation
 
 		public bool SendReplica(R replication)
 		{
-			if (partnerCallback == null) return false;
+			if (replication == null) return false;
 
 			try
 			{
@@ -162,7 +167,7 @@ namespace Common.Implementation
 		{
 			try
 			{
-				return partnerServiceProxy?.ForwardIntegrityUpdate();
+				return partnerServiceProxy.ForwardIntegrityUpdate();
 			}
 			catch (Exception e)
 			{

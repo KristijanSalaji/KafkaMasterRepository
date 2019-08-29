@@ -45,7 +45,7 @@ namespace Common.Proxy
 
 		#region IReplicationService
 
-		public byte[] ForwardIntegrityUpdate()
+		public virtual byte[] ForwardIntegrityUpdate()
 		{
 			try
 			{
@@ -58,7 +58,7 @@ namespace Common.Proxy
 			}
 		}
 
-		public bool RegisterToPartner()
+		public virtual bool RegisterToPartner()
 		{
 			try
 			{
@@ -75,7 +75,7 @@ namespace Common.Proxy
 
 		#region IReplicationServiceCallback
 
-		public bool ForwardReplica(R replication)
+		public virtual bool ForwardReplica(R replication)
 		{
 			if (forwardReplicaEvent == null) return false;
 

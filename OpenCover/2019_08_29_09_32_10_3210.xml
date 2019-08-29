@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\MasterKafkaRepo\Kafka\x64\KafkaTest.dll" total="31" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2019-08-29" time="09:32:16">
+  <environment nunit-version="2.6.2.12296" clr-version="4.0.30319.42000" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="D:\MasterKafkaRepo\Kafka\OpenCover\7c80dcc2-feb6-480e-8630-0115f0b91abd" machine-name="W10ENT" user="admin" user-domain="W10ENT" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="D:\MasterKafkaRepo\Kafka\x64\KafkaTest.dll" executed="True" result="Success" success="True" time="1.127" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="KafkaTest" executed="True" result="Success" success="True" time="1.073" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="BrokerSyncTest" executed="True" result="Success" success="True" time="0.440" asserts="0">
+            <results>
+              <test-case name="KafkaTest.BrokerSyncTest.AddTopic" executed="True" result="Success" success="True" time="0.214" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.AddTopicWhenTopicIsAlreadyAdded" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.DeleteTopic" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.DeleteTopicWhichDontExist" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.PublishMessageWithNullValue" executed="True" result="Success" success="True" time="0.099" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.PublishWhenTopicDidNotExistTest" executed="True" result="Success" success="True" time="0.060" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.PublishWhenTopicExist" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithInvalidOffset" executed="True" result="Success" success="True" time="0.008" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithInvalidTopic" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithNullParametar" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestMessageWithValidParametars" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStream" executed="True" result="Success" success="True" time="0.015" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStreamWithBadCount" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.RequestStreamWithNullValues" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.BrokerSyncTest.TopicCountTest" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="ReplicationServiceTest" executed="True" result="Success" success="True" time="0.630" asserts="0">
+            <results>
+              <test-case name="KafkaTest.ReplicationServiceTest.ClientRegisterToReplicationService" executed="True" result="Success" success="True" time="0.576" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ClientRegisterToReplicationServiceWhenCallbackInNull" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.DelivarReplicaToclient" executed="True" result="Success" success="True" time="0.011" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.DelivarReplicaToclientWhenCallbackIsNull" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ForwardIntegirtyUpdateRequestToClient" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ForwardIntegirtyUpdateRequestToClientWhenCallbackIsNull" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ForwardReplicaToClient" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ForwardReplicaToClientWhenCallbackIsNull" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.ForwardReplicaToClientWhenReplicaIsNull" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.PartnerRegisterToReplicationService" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.PartnerRegisterToReplicationServiceWhenCallbackIsNull" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.RequsetIntegrityUpdateFromPartner" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.RequsetIntegrityUpdateFromPartnerWhenProxyIsNull" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.SendReplicaToPartner" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.SendReplicaToPartnerWhenCallbackIsNull" executed="True" result="Success" success="True" time="0.002" asserts="0" />
+              <test-case name="KafkaTest.ReplicationServiceTest.SendReplicaToPartnerWhenReplicaIsNull" executed="True" result="Success" success="True" time="0.001" asserts="0" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
