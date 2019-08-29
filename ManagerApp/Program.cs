@@ -38,6 +38,7 @@ namespace ManagerApp
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
 
 			var manager = new PublishManager<Topic>();
+			manager.StartAsyncSendDataProcess();
 			manager.CreateProxy();
 
 			managerHost = new ManagerHost<Topic>();

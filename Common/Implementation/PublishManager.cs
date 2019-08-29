@@ -17,25 +17,42 @@ namespace Common.Implementation
 	public class PublishManager<T> : IPublishManager<T>
 	{
 		public bool SendData { get; set; }
+		public NotifyStatus NotifyStatus { get; set; }
+		public int Waitingtime { get; set; }
 
-		private readonly Queue<Message<T>> asyncQueue;
+			private readonly Queue<Message<T>> asyncQueue;
 		private BrokerPublishProxy<T> brokerPublishProxy;
 		private readonly Semaphore notifySemaphore;
-		private readonly CallbackHandler<INotifyCallback> producerCallbackHandler;
+		private readonly ICallbackHandler<INotifyCallback> producerCallbackHandler;
 
 		public PublishManager()
 		{
 			SendData = true;
+			NotifyStatus = NotifyStatus.Failed;
+			Waitingtime = 500;
 
 			producerCallbackHandler = new CallbackHandler<INotifyCallback>();
 
 			notifySemaphore = new Semaphore(0,1);
 
 			asyncQueue = new Queue<Message<T>>();
-
-			var sendThread = new Thread(SendDataProcess);
-			sendThread.Start();
 		}
+
+		#region Test constructor
+
+		public PublishManager(BrokerPublishProxy<T> proxy, ICallbackHandler<INotifyCallback> cbHandler, Queue<Message<T>> queue)
+		{
+			this.brokerPublishProxy = proxy;
+			this.producerCallbackHandler = cbHandler;
+			this.asyncQueue = queue;
+
+			SendData = true;
+			NotifyStatus = NotifyStatus.Failed;
+			Waitingtime = 500;
+			notifySemaphore = new Semaphore(0, 1);
+		}
+
+		#endregion
 
 		public void CreateProxy()
 		{
@@ -48,7 +65,7 @@ namespace Common.Implementation
 			brokerPublishProxy.Initialize(ipAddress, port, endpoint);
 		}
 
-		private void BrokerPublishProxyOnNotifyEvent(NotifyStatus status)
+		public void BrokerPublishProxyOnNotifyEvent(NotifyStatus status)
 		{
 			Console.WriteLine("Notify client with status " + status);
 
@@ -58,6 +75,19 @@ namespace Common.Implementation
 			}
 
 			notifySemaphore.Release(1);
+		}
+
+		public void StartAsyncSendDataProcess()
+		{
+			var sendThread = new Thread(AsyncSendDataProcess);
+			sendThread.Start();
+		}
+
+		public int GetAsyncQueueCount()
+		{
+			if (asyncQueue == null) return -1;
+
+			return asyncQueue.Count;
 		}
 
 		#region IPublishManager
@@ -80,9 +110,9 @@ namespace Common.Implementation
 		{
 			try
 			{
-				var status = brokerPublishProxy.PublishSync(message);
-				producerCallbackHandler.GetCallback().Notify(status);
-				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {status}");
+				NotifyStatus = brokerPublishProxy.PublishSync(message);
+				producerCallbackHandler.GetCallback().Notify(NotifyStatus);
+				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {NotifyStatus}");
 			}
 			catch (Exception e)
 			{
@@ -93,15 +123,13 @@ namespace Common.Implementation
 
 		#endregion
 
-		#region Private
-
-		private void SendDataProcess()
+		public void AsyncSendDataProcess()
 		{
 			while (SendData)
 			{
 				if (asyncQueue == null || asyncQueue.Count == 0)
 				{
-					Thread.Sleep(500);
+					Thread.Sleep(Waitingtime);
 					continue;
 				}
 
@@ -118,7 +146,5 @@ namespace Common.Implementation
 				}
 			}
 		}
-
-		#endregion
 	}
 }

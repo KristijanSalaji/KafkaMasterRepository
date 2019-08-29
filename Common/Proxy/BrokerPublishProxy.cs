@@ -54,7 +54,7 @@ namespace Common.Proxy
 			}
 		}
 
-		public void PublishAsync(Message<T> message)
+		public virtual void PublishAsync(Message<T> message)
 		{
 			try
 			{
@@ -62,12 +62,12 @@ namespace Common.Proxy
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while publishing message: {e.Message}");
+				Console.WriteLine($"Exception while publishing message: {e.Message}");
 				throw;
 			}
 		}
 
-		public NotifyStatus PublishSync(Message<T> message)
+		public virtual NotifyStatus PublishSync(Message<T> message)
 		{
 			try
 			{
@@ -75,7 +75,7 @@ namespace Common.Proxy
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Excpetion while publishing message: {e.Message}");
+				Console.WriteLine($"Exception while publishing message: {e.Message}");
 				throw;
 			}
 		}

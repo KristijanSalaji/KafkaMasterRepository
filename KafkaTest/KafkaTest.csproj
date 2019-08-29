@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="BrokerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishManagerTest.cs" />
     <Compile Include="ReplicationServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>

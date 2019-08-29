@@ -1,0 +1,4 @@
+KafkaTest.PublishManagerTest.PublishAsyncDataToManager
+KafkaTest.PublishManagerTest.PublishAsyncDataToManagerWhenQueueIsNull
+KafkaTest.PublishManagerTest.PublishSyncDataToManager
+KafkaTest.PublishManagerTest.PublishSyncDataToManagerWhenProxyIsNull
