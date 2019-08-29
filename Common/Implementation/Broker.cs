@@ -81,12 +81,7 @@ namespace Common.Implementation
 			{
 				var record = ReadRecord(request);
 
-				if (record != null)
-				{
-					return new Message<T>() { Topic = record.Topic, Data = record.Data };
-				}
-
-				return null;
+				return record != null ? new Message<T>() { Topic = record.Topic, Data = record.Data } : null;
 			}
 			catch (Exception e)
 			{
@@ -103,7 +98,7 @@ namespace Common.Implementation
 
 				var retVal = new List<Message<T>>(request.Count);
 
-				for (int i = 0; i < request.Count; i++)
+				for (var i = 0; i < request.Count; i++)
 				{
 					if (streamData[request.Topic].Count > request.Offset)
 					{
