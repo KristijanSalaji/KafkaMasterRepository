@@ -19,7 +19,7 @@ namespace Common.Implementation
 		private readonly ReaderWriterLockSlim streamDataLocker;
 		private ReplicationClientProxy<Message<T>> replicationClientProxy;
 		private State state;
-		private readonly CallbackHandler<INotifyCallback> clientCallbackHandler;
+		private readonly ICallbackHandler<INotifyCallback> clientCallbackHandler;
 
 		public Broker(State state)
 		{
@@ -30,6 +30,19 @@ namespace Common.Implementation
 			clientCallbackHandler = new CallbackHandler<INotifyCallback>();
 			//InitializeReplicationClientProxy();
 		}
+
+		#region Test constructor
+
+		public Broker(State state, ICallbackHandler<INotifyCallback> clientCallbackHandler)
+		{
+			this.state = state;
+			this.clientCallbackHandler = clientCallbackHandler;
+
+			streamData = new Dictionary<T, List<Record<T>>>();
+			streamDataLocker = new ReaderWriterLockSlim();
+		}
+
+		#endregion
 
 		#region Contract implementation
 

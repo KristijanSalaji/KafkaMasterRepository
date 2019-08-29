@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common.CallbackHandler;
 using Common.Converter;
 using Common.Enums;
 using Common.Implementation;
+using Common.Interfaces;
 using Common.Model;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace KafkaTest
 {
 	[TestFixture]
-	public class BrokerSyncTest
+	public class BrokerTest
 	{
+		#region Moq
+
+		private class ClientMoq : INotifyCallback
+		{
+			public void Notify(NotifyStatus status)
+			{
+
+			}
+		}
+
+		#endregion
+
 		#region PublishSync test
 
 		[Test]
@@ -248,6 +263,32 @@ namespace KafkaTest
 			var result = broker.DeleteTopic(Topic.FirstT);
 
 			Assert.IsTrue(result);
+		}
+
+		#endregion
+
+		#region Publish async
+
+		[Test]
+		public void PublishAsyncToBroker()
+		{
+			var clientMoq = new ClientMoq();
+			var clientCbHandler = Substitute.For<ICallbackHandler<INotifyCallback>>();
+			clientCbHandler.GetCallback().Returns(clientMoq);
+
+			var broker = new Broker<Topic>(State.StandBy, clientCbHandler);
+
+			var testData = "Test data";
+			Assert.DoesNotThrow(() => broker.PublishAsync(new Message<Topic>() {Topic = Topic.FirstT, Data = testData.ToByteArray()}));
+		}
+
+		[Test]
+		public void PublishAsyncToBrokerWhenCallbackIsNull()
+		{
+			var broker = new Broker<Topic>(State.StandBy, null);
+
+			var testData = "Test data";
+			Assert.Catch<Exception>(() => broker.PublishAsync(new Message<Topic>() { Topic = Topic.FirstT, Data = testData.ToByteArray() }));
 		}
 
 		#endregion
