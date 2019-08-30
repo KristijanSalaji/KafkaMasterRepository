@@ -5,6 +5,7 @@ using Common.Enums;
 using Common.Interfaces;
 using Common.Proxy;
 using System.Configuration;
+using Common.Model;
 
 namespace Common.Implementation
 {
@@ -19,7 +20,7 @@ namespace Common.Implementation
 		private readonly ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler;
 		private readonly ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler;
 
-		private readonly ReplicationServiceProxy<R> partnerServiceProxy;
+		private readonly IReplicationServiceProxy<R> partnerServiceProxy;
 
 		public ReplicationService(State state)
 		{
@@ -43,7 +44,7 @@ namespace Common.Implementation
 
 		#region Test constructor
 
-		public ReplicationService(ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler, ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler, ReplicationServiceProxy<R> proxy)
+		public ReplicationService(ICallbackHandler<IReplicationClientCallback<R>> clientCallbackHandler, ICallbackHandler<IReplicationServiceCallback<R>> serviceCallbackHandler, IReplicationServiceProxy<R> proxy)
 		{
 			this.clientCallbackHandler = clientCallbackHandler;
 			this.serviceCallbackHandler = serviceCallbackHandler;
@@ -55,11 +56,11 @@ namespace Common.Implementation
 
 		#region Forward replica event method
 
-		public void DeliverReplica(R replication)
+		public void DeliverReplica(object sender,ReplicationEventArgs<R> args)
 		{
 			try
 			{
-				clientCallback.DeliverReplica(replication);
+				clientCallback.DeliverReplica(args.Replica);
 			}
 			catch (Exception e)
 			{
@@ -153,7 +154,7 @@ namespace Common.Implementation
 			{
 				return partnerCallback.ForwardReplica(replication);
 			}
-			catch (Exception e)
+			catch
 			{
 				return false;
 			}

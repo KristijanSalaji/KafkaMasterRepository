@@ -17,7 +17,7 @@ namespace Common.Implementation
 	{
 		private readonly IDictionary<T, List<Record<T>>> streamData;
 		private readonly ReaderWriterLockSlim streamDataLocker;
-		private ReplicationClientProxy<Message<T>> replicationClientProxy;
+		private IReplicationClientProxy<Message<T>> replicationClientProxy;
 		private State state;
 		private readonly ICallbackHandler<INotifyCallback> clientCallbackHandler;
 
@@ -136,9 +136,9 @@ namespace Common.Implementation
 			replicationClientProxy.RegisterToReplicationService();
 		}
 
-		private void ReplicaDelivered(Message<T> replication)
+		private void ReplicaDelivered(object sender, ReplicationEventArgs<Message<T>> args)
 		{
-			WriteRecord(replication);
+			WriteRecord(args.Replica);
 		}
 
 		public int TopicCount(T topic)

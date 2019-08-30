@@ -9,7 +9,7 @@ namespace Common.Implementation
 {
 	public class Consumer<T> : IConsumer<T>
 	{
-		private readonly BrokerRequestProxy<T> brokerRequestProxy;
+		private readonly IBrokerRequestProxy<T> brokerRequestProxy;
 
 		public Consumer()
 		{

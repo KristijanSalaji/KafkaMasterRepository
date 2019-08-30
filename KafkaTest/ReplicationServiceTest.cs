@@ -66,12 +66,29 @@ namespace KafkaTest
 			}
 		}
 
-		private class ProxyMoq<T> : ReplicationServiceProxy<Message<T>>
+		private class ProxyMoq<T> : IReplicationServiceProxy<Message<T>>
 		{
-			public override byte[] ForwardIntegrityUpdate()
+			public event EventHandler<ReplicationEventArgs<Message<T>>> ForwardReplicaEvent;
+
+			public byte[] ForwardIntegrityUpdate()
 			{
 				var response = "Integrity update test";
 				return response.ToByteArray();
+			}
+
+			public bool ForwardReplica(Message<T> replication)
+			{
+				return replication != null;
+			}
+
+			public void Initialize(string ipAddress, string port, string endpoint)
+			{
+				
+			}
+
+			public bool RegisterToPartner()
+			{
+				return true;
 			}
 		}
 		#endregion
@@ -226,14 +243,14 @@ namespace KafkaTest
 			var response = replicationService.RegisterToReplicationService();
 
 			Assert.IsTrue(response);
-			Assert.DoesNotThrow(() => replicationService.DeliverReplica(testMessage));
+			Assert.DoesNotThrow(() => replicationService.DeliverReplica(this, new ReplicationEventArgs<Message<Topic>>(testMessage)));
 			
 		}
 
 		[Test]
 		public void DelivarReplicaToclientWhenCallbackIsNull()
 		{
-			Assert.Catch<Exception>(() => replicationService.DeliverReplica(testMessage));
+			Assert.Catch<Exception>(() => replicationService.DeliverReplica(this, new ReplicationEventArgs<Message<Topic>>(testMessage)));
 		}
 	}
 }

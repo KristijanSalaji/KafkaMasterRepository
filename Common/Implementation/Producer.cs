@@ -12,7 +12,7 @@ namespace Common.Implementation
 {
 	public class Producer<T> : IProducer<T>
 	{
-		private readonly ManagerProxy<T> managerProxy;
+		private readonly IManagerProxy<T> managerProxy;
 
 		private readonly StatusSemaphore syncSemaphore;
 
@@ -20,17 +20,18 @@ namespace Common.Implementation
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var endpoint = ConfigurationManager.AppSettings["endpoint"];
+			var port = ConfigurationManager.AppSettings["port"];
 
 			syncSemaphore = new StatusSemaphore(0,1);
 
 			managerProxy = new ManagerProxy<T>();
 			managerProxy.NotifyEvent += ManagerProxyOnNotifyEvent;
-			managerProxy.Initialize(ipAddress, endpoint);
+			managerProxy.Initialize(ipAddress, port, endpoint);
 		}
 
-		private void ManagerProxyOnNotifyEvent(NotifyStatus status)
+		private void ManagerProxyOnNotifyEvent(object sender, NotifyEventArgs args)
 		{
-			syncSemaphore.Status = status;
+			syncSemaphore.Status = args.NotifyStatus;
 			syncSemaphore.Release(1);
 		}
 

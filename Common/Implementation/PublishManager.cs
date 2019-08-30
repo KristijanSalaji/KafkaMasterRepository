@@ -20,9 +20,10 @@ namespace Common.Implementation
 		public NotifyStatus NotifyStatus { get; set; }
 		public int Waitingtime { get; set; }
 
-			private readonly Queue<Message<T>> asyncQueue;
-		private BrokerPublishProxy<T> brokerPublishProxy;
+		private readonly Queue<Message<T>> asyncQueue;
 		private readonly Semaphore notifySemaphore;
+
+		private IBrokerPublishProxy<T> brokerPublishProxy;
 		private readonly ICallbackHandler<INotifyCallback> producerCallbackHandler;
 
 		public PublishManager()
@@ -40,7 +41,7 @@ namespace Common.Implementation
 
 		#region Test constructor
 
-		public PublishManager(BrokerPublishProxy<T> proxy, ICallbackHandler<INotifyCallback> cbHandler, Queue<Message<T>> queue)
+		public PublishManager(IBrokerPublishProxy<T> proxy, ICallbackHandler<INotifyCallback> cbHandler, Queue<Message<T>> queue)
 		{
 			this.brokerPublishProxy = proxy;
 			this.producerCallbackHandler = cbHandler;
@@ -65,11 +66,11 @@ namespace Common.Implementation
 			brokerPublishProxy.Initialize(ipAddress, port, endpoint);
 		}
 
-		public void BrokerPublishProxyOnNotifyEvent(NotifyStatus status)
+		public void BrokerPublishProxyOnNotifyEvent(object sender, NotifyEventArgs args)
 		{
-			Console.WriteLine("Notify client with status " + status);
+			Console.WriteLine("Notify client with status " + args.NotifyStatus);
 
-			if (status == NotifyStatus.Secceeded)
+			if (args.NotifyStatus == NotifyStatus.Secceeded)
 			{
 				asyncQueue.Dequeue();
 			}

@@ -2,33 +2,36 @@
 using System.Linq;
 using System.ServiceModel;
 using Common.Interfaces;
+using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ReplicationClientProxy<R> : IReplicationClient<R>, IReplicationClientCallback<R>
+	public class ReplicationClientProxy<R> : IReplicationClientProxy<R>
 	{
 
 		private IReplicationClient<R> proxy;
 
-		#region Deliver replica event
+		public event EventHandler<ReplicationEventArgs<R>> DeliverReplicaEvent;
 
-		public delegate void DeliverReplicaDelegate(R replication);
+		//#region Deliver replica event
 
-		private event DeliverReplicaDelegate deliverReplicaEvent;
+		//public delegate void DeliverReplicaDelegate(R replication);
 
-		public event DeliverReplicaDelegate DeliverReplicaEvent
-		{
-			add
-			{
-				if (deliverReplicaEvent == null || !deliverReplicaEvent.GetInvocationList().Contains(value))
-				{
-					deliverReplicaEvent += value;
-				}
-			}
-			remove { deliverReplicaEvent -= value; }
-		}
+		//private event DeliverReplicaDelegate deliverReplicaEvent;
 
-		#endregion
+		//public event DeliverReplicaDelegate DeliverReplicaEvent
+		//{
+		//	add
+		//	{
+		//		if (deliverReplicaEvent == null || !deliverReplicaEvent.GetInvocationList().Contains(value))
+		//		{
+		//			deliverReplicaEvent += value;
+		//		}
+		//	}
+		//	remove { deliverReplicaEvent -= value; }
+		//}
+
+		//#endregion
 
 		public ReplicationClientProxy()
 		{
@@ -91,9 +94,9 @@ namespace Common.Proxy
 
 		public bool DeliverReplica(R replication)
 		{
-			if (deliverReplicaEvent == null) return false;
+			if (DeliverReplicaEvent == null) return false;
 
-			deliverReplicaEvent.Invoke(replication);
+			DeliverReplicaEvent.Invoke(this, new ReplicationEventArgs<R>(replication));
 			return true;
 		}
 

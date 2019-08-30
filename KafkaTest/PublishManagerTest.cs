@@ -35,6 +35,8 @@ namespace KafkaTest
 
 		private class ProducerMoq : INotifyCallback
 		{
+			public event EventHandler<NotifyEventArgs> NotifyEvent;
+
 			public void Notify(NotifyStatus status)
 			{
 				
@@ -99,7 +101,7 @@ namespace KafkaTest
 			publishManager.StartAsyncSendDataProcess();
 			publishManager.PublishAsync(testMessage);
 			Thread.Sleep(publishManager.Waitingtime);
-			publishManager.BrokerPublishProxyOnNotifyEvent(NotifyStatus.Secceeded);
+			publishManager.BrokerPublishProxyOnNotifyEvent(this,new NotifyEventArgs(NotifyStatus.Secceeded));
 
 			Assert.AreEqual(publishManager.GetAsyncQueueCount(), 0);
 			publishManager.SendData = false;
@@ -111,7 +113,7 @@ namespace KafkaTest
 			publishManager.StartAsyncSendDataProcess();
 			publishManager.PublishAsync(testMessage);
 			Thread.Sleep(publishManager.Waitingtime);
-			publishManager.BrokerPublishProxyOnNotifyEvent(NotifyStatus.Failed);
+			publishManager.BrokerPublishProxyOnNotifyEvent(this, new NotifyEventArgs(NotifyStatus.Failed));
 
 			Assert.AreEqual(publishManager.GetAsyncQueueCount(), 1);
 			publishManager.SendData = false;

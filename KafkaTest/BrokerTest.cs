@@ -18,6 +18,8 @@ namespace KafkaTest
 
 		private class ClientMoq : INotifyCallback
 		{
+			public event EventHandler<NotifyEventArgs> NotifyEvent;
+
 			public void Notify(NotifyStatus status)
 			{
 

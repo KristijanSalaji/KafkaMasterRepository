@@ -6,7 +6,7 @@ using Common.Model;
 
 namespace Common.Proxy
 {
-	public class BrokerRequestProxy<T> : IConsumer<T>
+	public class BrokerRequestProxy<T> : IBrokerRequestProxy<T>
 	{
 		private IConsumer<T> proxy;
 

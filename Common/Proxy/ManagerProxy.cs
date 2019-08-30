@@ -8,36 +8,38 @@ using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ManagerProxy<T> : IPublishManager<T>, INotifyCallback
+	public class ManagerProxy<T> : IManagerProxy<T>
 	{
 		private IPublishManager<T> proxy;
 
-		#region Notify event
+		//#region Notify event
 
-		public delegate void NotifyDelegate(NotifyStatus status);
+		//public delegate void NotifyDelegate(NotifyStatus status);
 
-		private event NotifyDelegate notifyEvent;
+		//private event NotifyDelegate notifyEvent;
 
-		public event NotifyDelegate NotifyEvent
-		{
-			add
-			{
-				if (notifyEvent == null || !notifyEvent.GetInvocationList().Contains(value))
-				{
-					notifyEvent += value;
-				}
-			}
-			remove { notifyEvent -= value; }
-		}
+		//public event NotifyDelegate NotifyEvent
+		//{
+		//	add
+		//	{
+		//		if (notifyEvent == null || !notifyEvent.GetInvocationList().Contains(value))
+		//		{
+		//			notifyEvent += value;
+		//		}
+		//	}
+		//	remove { notifyEvent -= value; }
+		//}
 
-		#endregion
+		//#endregion
 
 		public ManagerProxy()
 		{
 				
 		}
 
-		public void Initialize(string ipAddress, string endpoint)
+		public event EventHandler<NotifyEventArgs> NotifyEvent;
+
+		public void Initialize(string ipAddress,string port ,string endpoint)
 		{
 			var factory = new DuplexChannelFactory<IPublishManager<T>>(this,
 				new NetNamedPipeBinding() { OpenTimeout = TimeSpan.MaxValue },
@@ -50,9 +52,9 @@ namespace Common.Proxy
 
 		public void Notify(NotifyStatus status)
 		{
-			if (notifyEvent != null)
+			if (NotifyEvent != null)
 			{
-				notifyEvent.Invoke(status);
+				NotifyEvent.Invoke(this, new NotifyEventArgs(status));
 			}
 		}
 

@@ -8,29 +8,31 @@ using Common.Model;
 
 namespace Common.Proxy
 {
-	public class BrokerPublishProxy<T> : IProducer<T>, INotifyCallback
+	public class BrokerPublishProxy<T> : IBrokerPublishProxy<T>
 	{
 		private IProducer<T> proxy;
 
-		#region Notify event
+		public event EventHandler<NotifyEventArgs> NotifyEvent;
 
-		public delegate void NotifyDelegate(NotifyStatus status);
+		//#region Notify event
 
-		private event NotifyDelegate notifyEvent;
+		//public delegate void NotifyDelegate(NotifyStatus status);
 
-		public event NotifyDelegate NotifyEvent
-		{
-			add
-			{
-				if (notifyEvent == null || !notifyEvent.GetInvocationList().Contains(value))
-				{
-					notifyEvent += value;
-				}
-			}
-			remove { notifyEvent -= value; }
-		}
+		//private event NotifyDelegate notifyEvent;
 
-		#endregion
+		//public event NotifyDelegate NotifyEvent
+		//{
+		//	add
+		//	{
+		//		if (notifyEvent == null || !notifyEvent.GetInvocationList().Contains(value))
+		//		{
+		//			notifyEvent += value;
+		//		}
+		//	}
+		//	remove { notifyEvent -= value; }
+		//}
+
+		//#endregion
 
 		public BrokerPublishProxy()
 		{
@@ -48,9 +50,9 @@ namespace Common.Proxy
 
 		public void Notify(NotifyStatus status)
 		{
-			if (notifyEvent != null)
+			if (NotifyEvent != null)
 			{
-				notifyEvent.Invoke(status);
+				NotifyEvent.Invoke(this, new NotifyEventArgs(status));
 			}
 		}
 

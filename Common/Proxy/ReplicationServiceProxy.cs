@@ -2,32 +2,35 @@
 using System.Linq;
 using System.ServiceModel;
 using Common.Interfaces;
+using Common.Model;
 
 namespace Common.Proxy
 {
-	public class ReplicationServiceProxy<R> : IReplicationService, IReplicationServiceCallback<R>
+	public class ReplicationServiceProxy<R> : IReplicationServiceProxy<R>
 	{
 		private IReplicationService proxy;
 
-		#region Forward replica event
+		public event EventHandler<ReplicationEventArgs<R>> ForwardReplicaEvent;
 
-		public delegate void ForwardReplicaDelegate(R replication);
+		//#region Forward replica event
 
-		private event ForwardReplicaDelegate forwardReplicaEvent;
+		//public delegate void ForwardReplicaDelegate(R replication);
 
-		public event ForwardReplicaDelegate ForwardReplicaEvent
-		{
-			add
-			{
-				if (forwardReplicaEvent == null || !forwardReplicaEvent.GetInvocationList().Contains(value))
-				{
-					forwardReplicaEvent += value;
-				}
-			}
-			remove { forwardReplicaEvent -= value; }
-		}
+		//private event ForwardReplicaDelegate forwardReplicaEvent;
 
-		#endregion
+		//public event ForwardReplicaDelegate ForwardReplicaEvent
+		//{
+		//	add
+		//	{
+		//		if (forwardReplicaEvent == null || !forwardReplicaEvent.GetInvocationList().Contains(value))
+		//		{
+		//			forwardReplicaEvent += value;
+		//		}
+		//	}
+		//	remove { forwardReplicaEvent -= value; }
+		//}
+
+		//#endregion
 
 		public ReplicationServiceProxy()
 		{
@@ -77,9 +80,9 @@ namespace Common.Proxy
 
 		public virtual bool ForwardReplica(R replication)
 		{
-			if (forwardReplicaEvent == null) return false;
+			if (ForwardReplicaEvent == null) return false;
 
-			forwardReplicaEvent.Invoke(replication);
+			ForwardReplicaEvent.Invoke(this, new ReplicationEventArgs<R>(replication));
 			return true;
 		}
 

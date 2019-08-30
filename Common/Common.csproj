@@ -56,6 +56,10 @@
     <Compile Include="Implementation\Consumer.cs" />
     <Compile Include="Implementation\Producer.cs" />
     <Compile Include="Implementation\ReplicationService.cs" />
+    <Compile Include="Interfaces\IBrokerPublishProxy.cs" />
+    <Compile Include="Interfaces\IBrokerRequestProxy.cs" />
+    <Compile Include="Interfaces\IInitializeProxy.cs" />
+    <Compile Include="Interfaces\IManagerProxy.cs" />
     <Compile Include="Interfaces\IPublishManager.cs" />
     <Compile Include="Interfaces\IBroker.cs" />
     <Compile Include="Interfaces\IConsumer.cs" />
@@ -63,10 +67,14 @@
     <Compile Include="Interfaces\IProducer.cs" />
     <Compile Include="Interfaces\IReplicationClient.cs" />
     <Compile Include="Interfaces\IReplicationClientCallback.cs" />
+    <Compile Include="Interfaces\IReplicationClientProxy.cs" />
     <Compile Include="Interfaces\IReplicationService.cs" />
     <Compile Include="Interfaces\IReplicationServiceCallback.cs" />
+    <Compile Include="Interfaces\IReplicationServiceProxy.cs" />
     <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\NotifyEventArgs.cs" />
     <Compile Include="Model\Record.cs" />
+    <Compile Include="Model\ReplicationEventArgs.cs" />
     <Compile Include="Model\SingleRequest.cs" />
     <Compile Include="Model\StatusSemaphore.cs" />
     <Compile Include="Model\MultipleRequest.cs" />
