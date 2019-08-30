@@ -12,6 +12,8 @@ namespace Common.Proxy
 	{
 		private IPublishManager<T> proxy;
 
+		public event EventHandler<NotifyEventArgs> NotifyEvent;
+
 		//#region Notify event
 
 		//public delegate void NotifyDelegate(NotifyStatus status);
@@ -36,8 +38,6 @@ namespace Common.Proxy
 		{
 				
 		}
-
-		public event EventHandler<NotifyEventArgs> NotifyEvent;
 
 		public void Initialize(string ipAddress,string port ,string endpoint)
 		{
