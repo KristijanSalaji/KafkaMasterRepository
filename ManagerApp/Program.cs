@@ -19,7 +19,7 @@ namespace ManagerApp
 			//var state = (State)Enum.Parse(typeof(State), ConfigurationManager.AppSettings["state"]);
 			ManagerHost<Topic> managerHost;
 
-			InitializeHosts(out managerHost);
+			var manager = InitializeHosts(out managerHost);
 
 			managerHost.Open();
 		
@@ -27,11 +27,11 @@ namespace ManagerApp
 			Console.WriteLine("Press any key for exit...");
 			Console.ReadLine();
 
+			manager.SendData = false;
 			managerHost.Close();
-
 		}
 
-		private static void InitializeHosts(out ManagerHost<Topic> managerHost)
+		private static PublishManager<Topic> InitializeHosts(out ManagerHost<Topic> managerHost)
 		{
 			var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
 			var port = ConfigurationManager.AppSettings["port"];
@@ -44,6 +44,7 @@ namespace ManagerApp
 			managerHost = new ManagerHost<Topic>();
 			managerHost.Initialize(ipAddress, port, endpoint, manager);
 
+			return manager;
 		}
 	}
 }
