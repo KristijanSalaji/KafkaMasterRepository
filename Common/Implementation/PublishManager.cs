@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using Common.Enums;
@@ -22,6 +23,7 @@ namespace Common.Implementation
 
 		private readonly Queue<Message<T>> asyncQueue;
 		private readonly Semaphore notifySemaphore;
+		private const int queueCapacity = 2000000;
 
 		private IBrokerPublishProxy<T> brokerPublishProxy;
 		private readonly ICallbackHandler<INotifyCallback> producerCallbackHandler;
@@ -36,7 +38,7 @@ namespace Common.Implementation
 
 			notifySemaphore = new Semaphore(0,1);
 
-			asyncQueue = new Queue<Message<T>>();
+			asyncQueue = new Queue<Message<T>>(queueCapacity);
 		}
 
 		#region Test constructor
@@ -68,7 +70,7 @@ namespace Common.Implementation
 
 		public void BrokerPublishProxyOnNotifyEvent(object sender, NotifyEventArgs args)
 		{
-			Console.WriteLine("Notify client with status " + args.NotifyStatus);
+			//Console.WriteLine("Notify client with status " + args.NotifyStatus);
 
 			if (args.NotifyStatus == NotifyStatus.Secceeded)
 			{
@@ -98,7 +100,7 @@ namespace Common.Implementation
 			try
 			{
 				asyncQueue.Enqueue(message);
-				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} successfully enqueued!");
+				//Console.WriteLine($"Message with data {message.Data.ToObject<string>()} successfully enqueued!");
 			}
 			catch (Exception e)
 			{
@@ -113,7 +115,7 @@ namespace Common.Implementation
 			{
 				NotifyStatus = brokerPublishProxy.PublishSync(message);
 				producerCallbackHandler.GetCallback().Notify(NotifyStatus);
-				Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {NotifyStatus}");
+				//Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {NotifyStatus}");
 			}
 			catch (Exception e)
 			{

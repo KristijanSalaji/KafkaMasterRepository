@@ -51,7 +51,7 @@ namespace Common.Implementation
 			try
 			{
 				var status = WriteRecord(message);
-				Console.WriteLine($"Message status:{status}  with data: {message.Data.ToObject<string>()}");
+				//Console.WriteLine($"Message status:{status}  with data: {message.Data.ToObject<string>()}");
 				clientCallbackHandler.GetCallback().Notify(status);
 			}
 			catch (Exception e)
@@ -206,7 +206,7 @@ namespace Common.Implementation
 
 				streamDataLocker.ExitWriteLock();
 
-				Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
+				//Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
 			}
 
 			return status;

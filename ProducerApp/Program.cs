@@ -53,7 +53,7 @@ namespace ProducerApp
 				producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				count++;
-				Console.WriteLine("Message {0} successfully sent", count);
+				//Console.WriteLine("Message {0} successfully sent", count);
 
 
 				//Thread.Sleep(10);
@@ -70,10 +70,10 @@ namespace ProducerApp
 				var state = producer.PublishSync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				count++;
-				Console.WriteLine("Message {0} sent with state {1}", count, state);
+				//Console.WriteLine("Message {0} sent with state {1}", count, state);
 
 
-				Thread.Sleep(10);
+				//Thread.Sleep(10);
 			}
 		}
 
