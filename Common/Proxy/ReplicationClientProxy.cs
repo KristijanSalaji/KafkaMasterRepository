@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using Common.Interfaces;
 using Common.Model;
+using Common.Model.CustomEventHandler;
 
 namespace Common.Proxy
 {
@@ -12,6 +14,7 @@ namespace Common.Proxy
 		private IReplicationClient<R> proxy;
 
 		public event EventHandler<ReplicationEventArgs<R>> DeliverReplicaEvent;
+		public event ByteEventHandler RequestIntegrityUpdateEvent;
 
 		//#region Deliver replica event
 
@@ -102,7 +105,9 @@ namespace Common.Proxy
 
 		public byte[] GetIntegrityUpdate()
 		{
-			throw new NotImplementedException();
+			if (RequestIntegrityUpdateEvent == null) return null;
+
+			return RequestIntegrityUpdateEvent.Invoke();
 		}
 
 		#endregion

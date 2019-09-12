@@ -70,8 +70,6 @@ namespace Common.Implementation
 
 		public void BrokerPublishProxyOnNotifyEvent(object sender, NotifyEventArgs args)
 		{
-			//Console.WriteLine("Notify client with status " + args.NotifyStatus);
-
 			if (args.NotifyStatus == NotifyStatus.Secceeded)
 			{
 				asyncQueue.Dequeue();
@@ -100,7 +98,6 @@ namespace Common.Implementation
 			try
 			{
 				asyncQueue.Enqueue(message);
-				//Console.WriteLine($"Message with data {message.Data.ToObject<string>()} successfully enqueued!");
 			}
 			catch (Exception e)
 			{
@@ -115,7 +112,6 @@ namespace Common.Implementation
 			{
 				NotifyStatus = brokerPublishProxy.PublishSync(message);
 				producerCallbackHandler.GetCallback().Notify(NotifyStatus);
-				//Console.WriteLine($"Message with data {message.Data.ToObject<string>()} and status {NotifyStatus}");
 			}
 			catch (Exception e)
 			{

@@ -11,18 +11,10 @@ namespace Common.Interfaces
 		[OperationContract]
 		bool RegisterToReplicationService();
 
-		#region Hot
-
 		[OperationContract]
 		bool SendReplica(R replication);
 
-		#endregion
-
-		#region StandBy
-
 		[OperationContract]
 		byte[] RequestIntegrityUpdate();
-
-		#endregion
 	}
 }

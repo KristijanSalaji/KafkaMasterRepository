@@ -71,6 +71,7 @@
     <Compile Include="Interfaces\IReplicationService.cs" />
     <Compile Include="Interfaces\IReplicationServiceCallback.cs" />
     <Compile Include="Interfaces\IReplicationServiceProxy.cs" />
+    <Compile Include="Model\CustomiEventHandler.cs" />
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\NotifyEventArgs.cs" />
     <Compile Include="Model\Record.cs" />

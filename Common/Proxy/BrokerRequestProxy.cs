@@ -16,7 +16,7 @@ namespace Common.Proxy
 		}
 
 		public void Initialize(string ipAddress, string port, string endpoint)
-		{
+		{ 
 			var factory = new ChannelFactory<IConsumer<T>>(
 				new NetTcpBinding() { OpenTimeout = TimeSpan.MaxValue },
 				new EndpointAddress($"net.tcp://{ipAddress}:{port}/Broker/{endpoint}"));

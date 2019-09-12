@@ -15,7 +15,7 @@ namespace Common.Implementation
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
 	public class Broker<T> : IBroker<T>
 	{
-		private readonly IDictionary<T, List<Record<T>>> streamData;
+		private IDictionary<T, List<Record<T>>> streamData;
 		private readonly ReaderWriterLockSlim streamDataLocker;
 		private IReplicationClientProxy<Message<T>> replicationClientProxy;
 		private State state;
@@ -28,7 +28,6 @@ namespace Common.Implementation
 			streamData = new Dictionary<T, List<Record<T>>>();
 			streamDataLocker = new ReaderWriterLockSlim();
 			clientCallbackHandler = new CallbackHandler<INotifyCallback>();
-			//InitializeReplicationClientProxy();
 		}
 
 		#region Test constructor
@@ -51,7 +50,6 @@ namespace Common.Implementation
 			try
 			{
 				var status = WriteRecord(message);
-				//Console.WriteLine($"Message status:{status}  with data: {message.Data.ToObject<string>()}");
 				clientCallbackHandler.GetCallback().Notify(status);
 			}
 			catch (Exception e)
@@ -124,6 +122,16 @@ namespace Common.Implementation
 
 		#region Public methods
 
+		public void RequestIntegiryUpdate()
+		{
+			streamData = replicationClientProxy.RequestIntegrityUpdate().ToObject<Dictionary<T, List<Record<T>>>>();
+		}
+
+		private byte[] IntegrityUpdateResponse()
+		{
+			return streamData?.ToByteArray();
+		}
+
 		public void InitializeReplicationClientProxy()
 		{
 			var ipAddress = ConfigurationManager.AppSettings["replicationServiceIpAddress"];
@@ -132,13 +140,9 @@ namespace Common.Implementation
 
 			replicationClientProxy = new ReplicationClientProxy<Message<T>>();
 			replicationClientProxy.DeliverReplicaEvent += ReplicaDelivered;
+			replicationClientProxy.RequestIntegrityUpdateEvent += IntegrityUpdateResponse;
 			replicationClientProxy.Initialize(ipAddress, port, endpoint);
 			replicationClientProxy.RegisterToReplicationService();
-		}
-
-		private void ReplicaDelivered(object sender, ReplicationEventArgs<Message<T>> args)
-		{
-			WriteRecord(args.Replica);
 		}
 
 		public int TopicCount(T topic)
@@ -205,8 +209,6 @@ namespace Common.Implementation
 				status = NotifyStatus.Secceeded;
 
 				streamDataLocker.ExitWriteLock();
-
-				//Console.WriteLine($"Message is received on {message.Topic} topic with data: {message.Data.ToObject<string>()}");
 			}
 
 			return status;
@@ -230,6 +232,15 @@ namespace Common.Implementation
 			return record;
 		}
 
+		//private byte[] IntegrityUpdateResponse()
+		//{
+		//	return streamData?.ToByteArray();
+		//}
+
+		private void ReplicaDelivered(object sender, ReplicationEventArgs<Message<T>> args)
+		{
+			WriteRecord(args.Replica);
+		}
 		#endregion
 	}
 }
