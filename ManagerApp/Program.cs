@@ -16,14 +16,12 @@ namespace ManagerApp
 		static void Main(string[] args)
 		{
 			Console.WriteLine("Initialize hosts...");
-			//var state = (State)Enum.Parse(typeof(State), ConfigurationManager.AppSettings["state"]);
 			ManagerHost<Topic> managerHost;
 
 			var manager = InitializeHosts(out managerHost);
 
 			managerHost.Open();
-		
-
+			
 			Console.WriteLine("Press any key for exit...");
 			Console.ReadLine();
 

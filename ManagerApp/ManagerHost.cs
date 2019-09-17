@@ -7,13 +7,7 @@ namespace ManagerApp
 	public class ManagerHost<T>
 	{
 		private ServiceHost host;
-
 		private string info;
-
-		public ManagerHost()
-		{
-
-		}
 
 		public bool Initialize(string address, string port, string endpoint, IPublishManager<T> manager)
 		{
@@ -44,6 +38,7 @@ namespace ManagerApp
 			catch (CommunicationObjectFaultedException ex)
 			{
 				Console.WriteLine($"Error while opening replication client host: {ex.Message}");
+				throw;
 			}
 		}
 
@@ -59,6 +54,7 @@ namespace ManagerApp
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Error while closing replication client host: {ex.Message}");
+				throw;
 			}
 		}
 	}

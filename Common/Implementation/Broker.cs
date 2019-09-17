@@ -127,11 +127,6 @@ namespace Common.Implementation
 			streamData = replicationClientProxy.RequestIntegrityUpdate().ToObject<Dictionary<T, List<Record<T>>>>();
 		}
 
-		private byte[] IntegrityUpdateResponse()
-		{
-			return streamData?.ToByteArray();
-		}
-
 		public void InitializeReplicationClientProxy()
 		{
 			var ipAddress = ConfigurationManager.AppSettings["replicationServiceIpAddress"];
@@ -232,10 +227,10 @@ namespace Common.Implementation
 			return record;
 		}
 
-		//private byte[] IntegrityUpdateResponse()
-		//{
-		//	return streamData?.ToByteArray();
-		//}
+		private byte[] IntegrityUpdateResponse()
+		{
+			return streamData?.ToByteArray();
+		}
 
 		private void ReplicaDelivered(object sender, ReplicationEventArgs<Message<T>> args)
 		{

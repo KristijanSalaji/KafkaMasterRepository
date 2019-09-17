@@ -12,6 +12,7 @@ namespace BrokerApp
 		static void Main(string[] args)
 		{
 			Thread.Sleep(2000);
+
 			Console.WriteLine("Initialize broker host...");
 			var brokerHost = InitializeHost();
 
@@ -38,6 +39,8 @@ namespace BrokerApp
 			broker.AddTopic(Topic.FirstT);
 			broker.AddTopic(Topic.SecondT);
 			broker.AddTopic(Topic.ThirdT);
+
+			if (state == State.StandBy) broker.RequestIntegiryUpdate();
 
 			brokerHost.Initialize(ipAddress, port, endpoint, broker);
 

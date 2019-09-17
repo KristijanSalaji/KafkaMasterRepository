@@ -7,13 +7,7 @@ namespace ReplicationServiceApp
 	public class ReplicationClientHost<R>
 	{
 		private ServiceHost host;
-
 		private string info;
-
-		public ReplicationClientHost()
-		{
-
-		}
 
 		public bool Initialize(string address, string port, string endpoint, IReplicationClient<R> replicationService)
 		{
@@ -44,6 +38,7 @@ namespace ReplicationServiceApp
 			catch (CommunicationObjectFaultedException ex)
 			{
 				Console.WriteLine($"Error while opening replication client host: {ex.Message}");
+				throw;
 			}
 		}
 
@@ -59,6 +54,7 @@ namespace ReplicationServiceApp
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Error while closing replication client host: {ex.Message}");
+				throw;
 			}
 		}
 	}

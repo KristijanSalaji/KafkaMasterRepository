@@ -7,13 +7,7 @@ namespace BrokerApp
 	public class BrokerHost<T>
 	{
 		private ServiceHost host;
-
 		private string info;
-
-		public BrokerHost()
-		{
-			
-		}
 
 		public bool Initialize(string address, string port, string endpoint, IBroker<T> broker)
 		{

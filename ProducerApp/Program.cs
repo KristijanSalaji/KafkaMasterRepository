@@ -12,12 +12,8 @@ namespace ProducerApp
 		private static int count = 0;
 		private static bool decision = true;
 
-		private static Semaphore waitSemaphore;
-
 		static void Main(string[] args)
 		{
-			waitSemaphore = new Semaphore(0,1);
-
 			Console.WriteLine("Enter topic number (0,1,2): ");
 			var topic = (Topic) Int32.Parse(Console.ReadLine());
 
@@ -33,7 +29,6 @@ namespace ProducerApp
 				t.Start();
 			}
 
-			//waitSemaphore.WaitOne();
 			Console.WriteLine("Press any key to finish... ");
 			Console.ReadLine();
 
@@ -53,10 +48,6 @@ namespace ProducerApp
 				producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				count++;
-				//Console.WriteLine("Message {0} successfully sent", count);
-
-
-				//Thread.Sleep(10);
 			}
 		}
 
@@ -70,10 +61,6 @@ namespace ProducerApp
 				var state = producer.PublishSync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 				count++;
-				//Console.WriteLine("Message {0} sent with state {1}", count, state);
-
-
-				//Thread.Sleep(10);
 			}
 		}
 
@@ -85,7 +72,6 @@ namespace ProducerApp
 			producer.PublishAsync(new Message<Topic>() { Topic = topic, Data = dataString.ToByteArray() });
 
 			producer.PublishSync(new Message<Topic>() {Topic = topic, Data = dataString.ToByteArray()});
-
 		}
 	}
 }

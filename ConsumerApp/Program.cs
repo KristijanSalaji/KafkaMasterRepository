@@ -10,7 +10,6 @@ namespace ConsumerApp
 	class Program
 	{
 		private static int offset = 0;
-
 		private static bool decision = true;
 
 		static void Main(string[] args)
@@ -40,13 +39,7 @@ namespace ConsumerApp
 
 				var message = consumer.SingleRequest(request);
 
-				if (message != null)
-				{
-					Console.WriteLine($"Message data: {message.Data.ToObject<string>()}");
-					offset++;
-				}
-
-				Thread.Sleep(10);
+				if (message != null) offset++;
 			}
 		}
 	}
